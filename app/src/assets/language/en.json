@@ -1,0 +1,177 @@
+{
+  "lang_name": "English",
+  "language": "Language",
+  "fevermap_title": "",
+  "back": "Back",
+  "today": "Today",
+  "user_description": "You are a %{age} year-old %{gender}, with %{diagnosis} diagnosis",
+  "no_demographics": "You did not enter your demographic information. Click on pencil icon to add the information",
+  "a_covid_diagnosis": "positive COVID-19",
+  "no_covid_diagnosis": "no positive COVID-19",
+  "cookie": {
+    "acceptance_message": "This website uses cookies to provide you a rich user experience. By continuing to use this website you are giving consent to cookies being used.",
+    "button_text": "Got it, thanks!"
+  },
+  "landing": {
+    "about": "About",
+    "about_title": "Welcome to COVIDstoplight",
+    "about_content_explanation": "If you have a smart phone or a computer you have the power to help save lives in your community.",
+    "about_current_methods": "",
+    "about_solution": "",
+    "about_data_collection": "Make a difference by answering one or two questions at least once a day (while at home, when at work, or out and about) to indicate how you’re feeling and where you are at that moment. This simple sharing of information will help the understanding and control of COVID-19.",
+    "about_current_participant_count": "To date, %{participantCount} people in Illinois have used COVIDstoplight to report their symptoms. ",
+
+    "how_to_participate": "How do I participate?",
+    "participation_info": "Simple: just click the button below labeled ",
+    "info_disclaimer": "We do not ask questions that could lead to you being recognized. We value your privacy and anonymity.",
+
+    "how_will_my_data_be_used": "How will this information be used?",
+    "data_use_explanation": "The data from everyone using COVIDstoplight will be combined and the aggregated results used to inform models of disease spread. The aggregated results will be made available to members of the Pandemic Response Commons Consortium.",
+    "about_fevermap": "This app derives from the excellent work of the Fevermap team."
+  },
+  "entry": {
+    "data_entry": "Health Report",
+    "first_entry_disclaimer": "Entries are submitted into the database based on your device. We would appreciate that you submitted your information from the same device every time. This will allow us to monitor your fever status better.",
+    "last_submission": "Last submission",
+    "submission_period_disclaimer": "To prevent unnecessary data, submissions are restricted to once every 12 hours.",
+    "sync_now": "Sync now",
+    "new_entry": "Health Report",
+    "first_time_disclaimer": "As this is your first time using COVIDstoplight, we will ask you a few questions.",
+    "these_questions_wont_be_repeated": "These questions won't be repeated on future submissions.",
+    "queued_entries": "You have queued entries",
+    "send_now": "Send now",
+    "questions": {
+      "how_are_feeling": "Making a difference is as easy as 1-2-3.",
+      "how_are_feeling_bullets": "Indicate below if you feel healthy now, or if you're not feeling well::If not feeling well, indicate what symptoms you are experiencing::Indicate where you are by entering your zip code",
+      "feeling_very_good": "Healthy",
+      "feeling_not_so_good": "Not so good",
+      "feeling_sick": "Sick",
+      "what_is_your_temperature": "What's your temperature?",
+      "temperature": "Temperature",
+      "how_much": "How much?",
+      "degrees_of_fever": "%{degrees} of fever",
+      "havent_measured_but": "I haven't measured but...",
+      "feel_healthy": "I feel healthy",
+      "feel_feverish": "I feel feverish",
+      "set_temperature": "Set temperature",
+      "other_symptoms": "Are you experiencing any of the following?",
+      "choose_all_that_apply": "Choose all that apply",
+      "cough": "Cough",
+      "difficulty_breathing": "Difficulty breathing",
+      "fever": "Fever",
+      "headache": "Headache",
+      "chills": "Chills",
+      "sore_throat": "Sore throat",
+      "shaking": "Repeated shaking with chills",
+      "loss_of_taste": "New loss of taste or smell",
+      "muscular_pain": "Muscle pain",
+      "positive_covid_diagnosis": "I have a positive diagnosis of COVID-19.",
+      "set_symptoms": "Continue",
+      "birth_year": "Birth year",
+      "birth_year_placeholder": "Decade of birth (years 1900 - 2020)",
+      "gender_in_passport": "Gender as stated in your passport or other government records",
+      "male": "Male",
+      "female": "Female",
+      "location_information": "Location information",
+      "whats_your_location": "What's your location?",
+      "city": "City",
+      "country": "Country",
+      "postal_code": "Zip code",
+      "location_determination_subtitle": "Location is determined using location API. Make sure to allow location sensors.",
+      "location_change_subtitle": "Enter your location in the zip code field or press the button below.",
+      "update_location": "Update location",
+      "use_gps": "Get my location from my device",
+      "set_location_and_submit": "Submit"
+    },
+    "previous_submissions": "Previous submissions",
+    "no_previous_submissions": "You will see your submission history here.",
+    "submit": "Submit",
+    "save": "Save",
+    "skip": "Skip",
+    "last_submission_was_done": "You last submission was made at %{date}",
+    "submission_count_text": "You have entered you fever information ",
+    "submission_count_times": "times",
+    "currently_holding_a_streak_of": "Your current consecutive days streak is: ",
+    "streak_days": "days"
+  },
+
+  "history": {
+    "title": "History",
+    "your_streak": "Your streak",
+    "days": "days",
+    "total_entries": "Total entries",
+    "achievement_title": "Your achievements",
+    "measurements": "reports",
+    "no_achievements_message": "You can earn badges for reporting continuously.",
+    "add_entry": "New report"
+  },
+
+  "stats": {
+    "stats": "Statewide Summary",
+    "number_reporting": "Number of people reporting",
+    "number_reports": "Number of health reports",
+    "description": "Darker areas have more reports of people feeling unwell"
+  },
+
+  "system_messages": {
+    "success": {
+      "location_update": "Location updated successfully",
+      "data_entry": "Successfully submitted data entry",
+      "offline_entry_queued": "Seems like you are offline. Entry has been queued.",
+      "entry_send_failed_queued": "Submission failed. Entry has been queued.",
+      "sync_finished": "Successfully synced entries.",
+      "subscribe_success": "Subscribed to push notifications successfully",
+      "unsubscribe_success": "Unsubscribed from push notifications successfully"
+    },
+    "error": {
+      "age_not_in_range": "Given birth year is not in the allowed range (1900 - 2020).",
+      "feeling_value_not_valid": "Unknow value for feeling",
+      "fever_temp_value_invalid": "The fever temperature value is not valid.",
+      "location_data_invalid": "The given location data is invalid.",
+      "api_data_invalid": "Data sent to the API was invalid.",
+      "gender_not_set": "Gender is not set.",
+      "do_not_submit_new_temp_until": "Do not submit a new temperature until %{dateTime}",
+      "subscribe_error": "Subscribing to push notifications failed",
+      "unsubscribe_error": "Unsubscribing from push notifications failed"
+    }
+  },
+  "dialog": {
+    "pwa_installer": {
+      "title": "Install COVIDstoplight",
+      "content": "COVIDstoplight can be installed as a Progressive Web Application. If installed, we can provide you with great extra features like faster runtime and push notifications (coming soon).",
+      "approve_text": "Install",
+      "decline_text": "Maybe later"
+    },
+    "notifications": {
+      "title": "Allow notifications",
+      "content": "COVIDstoplight would like to offer you a daily notification reminding you to log your daily health status. Allow notifications?",
+      "approve_text": "Allow notifications",
+      "decline_text": "No please"
+    },
+    "location": {
+      "title": "Allow Location Access",
+      "content": "Can we use location information from phone/browser or would you prefer to enter location with each report?",
+      "approve_text": "Allow Location Access",
+      "decline_text": "I will enter manually"
+    }
+  },
+
+  "notification": {
+    "daily_reminder": {
+      "title": "Good evening! \uD83D\uDE0A",
+      "content": "How are you feeling today?",
+      "healthy": "Healthy",
+      "sick": "Sick"
+    },
+    "thank_you": {
+      "title": "Successfully submitted data.",
+      "content": "Thank you for submitting!"
+    },
+    "subscribe_to_notifications": "Subscribe to notifications",
+    "unsubscribe_from_notifications": "Unsubscribe from notifications"
+  },
+  "social": {
+    "quote": "I just contributed to greater good",
+    "share_button_text": "share"
+  }
+}

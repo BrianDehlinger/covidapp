@@ -1,0 +1,29 @@
+---
+# NOTE! This is only for starting a development environment easily.
+# Do not run in production with this setup.
+#
+# Launch this with `docker-compose up --build`.
+# The logs will stay visible. Press Ctrl+C to exit.
+#
+# Delete containers and remove the database volume with
+# `docker-compose down --remove-orphans --volumes`.
+
+version: "2"
+
+services:
+
+  webapp:
+    image: "nginx:latest"
+    build: webapp
+    volumes:
+      - "./app/dist:/data/covidapp"
+    ports:
+      - 6006:6006
+
+  networks:
+    default:
+      external:
+        name: covidapp-default
+
+volumes:
+  webapp: ~

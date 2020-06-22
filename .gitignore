@@ -1,0 +1,6 @@
+
+# IDEs
+.idea
+
+# Deploy specific environment settings
+.env

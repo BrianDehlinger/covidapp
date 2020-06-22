@@ -1,0 +1,146 @@
+{
+  "lang_name": "Español",
+  "language": "Idioma",
+  "fevermap_title": "COVIDstoplight",
+  "back": "Atrás",
+  "today": "Hoy",
+  "user_description": "Eres un(a) %{gender} de %{age} años de edad, diagnosticado con: %{diagnosis}",
+  "a_covid_diagnosis": "con disgnóstico de COVID-19 positivo",
+  "no_covid_diagnosis": "con disgnóstico de COVID-19 negativo",
+
+  "landing": {
+    "about": "Acerca de",
+    "about_title": "¿Qué es COVIDstoplight?",
+    "about_content_explanation": " es una aplicación móvil y una web creada para la recolección de datos de una manera sencilla y en tiempo real de la prevalencia de la pandemia del Coronavirus COVID-19.",
+    "about_current_methods": "Los métodos actuales de seguimiento de la prevalencia del Conoravirus no dan una visión global, existe una gran cantidad de gente que aún no ha sido diagnosticada debido a que los recursos disponibles han sido derivados a aquellos que más lo necesitan.",
+    "about_solution": "COVIDstoplight presenta una solución a este problema. Con COVIDstoplight, cualquier persona en cualquier parte del mundo puede informar anónimamente de su fiebre u otros síntomas. Así es posible estimar la verdadera prevalencia de las infecciones de COVID-19 en tiempo real y proporcionar a los gobiernos datos que les ayuden a tomar decisiones más acertadas y en plazos en base a los datos recolectados.",
+    "about_data_collection": "Los datos recolectados por COVIDstoplight son anonimizados y serán usados para ayudarnos a tener una visión más realista de la situación global actual.",
+    "about_current_participant_count": "Hasta la fecha de hoy, %{participantCount} usuarios han usado COVIDstoplight para informar sobre sus síntomas. ",
+    "how_to_participate": "¿Cómo puedo participar?",
+    "participation_info": "Fácil. Simplemente ponte el termómetro y envía tu temperatura mediante Fivermap, envía también algo de información para fines estadísticos, como tu año de nacimiento y tu código postal.",
+    "info_disclaimer": "En ningún momento te pediremos información que permita identificarte públicamente. Respetamos tu privacidad y anonimato.",
+    "how_will_my_data_be_used": "¿Cómo serán usados mis datos?",
+    "data_use_explanation": "Los datos serán anonimizados, y posteriormente compartidos como datos abiertos a través de un API."
+  },
+
+  "entry": {
+    "data_entry": "Entrada de datos",
+    "first_entry_disclaimer": "Los registros son enviados a la base de datos en función de tu dispositivo. Por ello mejor si envías tu información siempre desde el mismo dispositivo. Esto nos permitirá monitorizar mejor el estado de tu fiebre.",
+    "last_submission": "Últimos datos enviados",
+    "submission_period_disclaimer": "Para evitar datos innecesarios, sólo se podrá enviar datos una vez cada doce horas.",
+    "sync_now": "Sincronizar ahora",
+    "new_entry": "Nuevo registro",
+    "first_time_disclaimer": "Como es la primera vez que usas COVIDstoplight, te haremos antes unas preguntas.",
+    "these_questions_wont_be_repeated": "Estas preguntas no se repetirán para registros futuros.",
+    "queued_entries": "Tienes datos en cola para enviar",
+    "send_now": "Enviar ahora",
+    "questions": {
+      "what_is_your_temperature": "¿Cuál es tu temperatura actual?",
+      "temperature": "Temperatura",
+      "how_much": "¿Cuánto?",
+      "degrees_of_fever": "%{degrees} de fiebre",
+      "not_measured": "No lo sé exactamente, no me la he medido.",
+      "havent_measured_but": "No me la he medido aún, pero...",
+      "set_temperature": "Guardar temperatura",
+      "other_symptoms": "¿Algún otro síntoma?",
+      "choose_all_that_apply": "Marca todos los que correspondan",
+      "cough": "Tos",
+      "difficulty_breathing": "Dificultad respiratoria",
+      "fever": "Fiebre",
+      "headache": "Dolor de cabeza",
+      "chills": "Escalofríos",
+      "sore_throat": "Dolor de garganta",
+      "shaking": "Escalofríos",
+      "loss_of_taste": "Pérdida de sabor o olfato",
+      "muscular_pain": "Dolor muscular",
+      "positive_covid_diagnosis": "He sido diagnostido como positivo a la COVID-19.",
+      "set_symptoms": "Guardar síntomas",
+      "birth_year": "Año de nacimiento",
+      "birth_year_placeholder": "Año de nacimiento (años 1900 - 2020)",
+      "gender_in_passport": "Género según figura en tu pasaporte u otro registro oficial",
+      "male": "Hombre",
+      "female": "Mujer",
+      "location_information": "Información sobre su ubicación",
+      "whats_your_location": "¿Dónde te encuentras?",
+      "city": "Ciudad",
+      "country": "País",
+      "postal_code": "Código postal",
+      "location_determination_subtitle": "La ubicación se determina usando un API de localización. Por favor permite el uso de sensores de localización.",
+      "location_change_subtitle": "Para actualizar tu localización, actualiza los valores de país y código postal y dale al botón más abajo.",
+      "update_location": "Actualizar ubicación",
+      "use_gps": "Obtener ubicación mediante GPS",
+      "set_location_and_submit": "Guardar ubicación y enviar"
+    },
+    "previous_submissions": "Envíos anteriores",
+    "submit": "Enviar",
+    "save": "Guardar",
+    "last_submission_was_done": "Tu último envío fue el %{date}",
+    "submission_count_text": "Has introducido tu temperatura ",
+    "submission_count_times": "veces",
+    "currently_holding_a_streak_of": "Llevas una racha seguida de: ",
+    "streak_days": "días"
+  },
+
+  "history": {
+    "title": "Historial",
+    "your_streak": "Tu racha",
+    "days": "Días",
+    "total_entries": "Total de entradas",
+    "measurements": "mediciones",
+    "add_entry": "Nueva entrada"
+  },
+
+  "stats": {
+    "stats": "Estadísticas"
+  },
+
+  "system_messages": {
+    "success": {
+      "location_update": "Ubicación actualizada con éxito",
+      "data_entry": "Entrada enviada satisfactoriamente",
+      "offline_entry_queued": "Parece que te has quedado sin red. Tu entrada ha sido puesta en cola.",
+      "entry_send_failed_queued": "Envío fallido. Tu entrada ha sido puesta en cola.",
+      "sync_finished": "Datos sincronizados satisfactoriamente.",
+      "subscribe_success": "Se ha suscrito a las notificaciones",
+      "unsubscribe_success": "Ha cancelado las notificaciones"
+    },
+    "error": {
+      "age_not_in_range": "El año de nacimiento no pertenece al rango permitido (1900 - 2020).",
+      "fever_temp_value_invalid": "El valor de temperatura no es válido.",
+      "location_data_invalid": "La ubicación provista no es válida.",
+      "api_data_invalid": "Los datos enviados al API no fueron válidos.",
+      "gender_not_set": "El género no ha sido establecido.",
+      "do_not_submit_new_temp_until": "No puedes enviar nuevas entradas hasta %{dateTime}",
+      "subscribe_error": "No se pudo suscribir a las notificaciones",
+      "unsubscribe_error": "No se pudo cancelar la suscripción a las notificaciones"
+    }
+  },
+  "dialog": {
+    "pwa_installer": {
+      "title": "Instalar COVIDstoplight",
+      "content": "COVIDstoplight se puede instalar como una aplicación web progresiva. Una vez instalada dispondrás de funcionalidad extra, como una ejecución más rápida y notificaciones directas (disponibles en breve).",
+      "approve_text": "Instalar",
+      "decline_text": "Quizás más tarde"
+    },
+    "notifications": {
+      "title": "Permitir notificationes",
+      "content": "COVIDstoplight puede recordarte a diario que envíes datos sobre tu estado de salud. ¿Permitir las notificaciones?",
+      "approve_text": "Permitir notificaciones",
+      "decline_text": "No, gracias"
+    }
+  },
+  "notification": {
+    "daily_reminder": {
+      "title": "Saludos! \uD83D\uDE0A",
+      "content": "¿Cómo te sientes hoy?",
+      "healthy": "Saludable",
+      "sick": "Enfermo"
+    },
+    "thank_you": {
+      "title": "Datos enviados satisfactoriamente.",
+      "content": "Gracias por su envío!"
+    },
+    "subscribe_to_notifications": "Suscribirse a las notificaciones",
+    "unsubscribe_from_notifications": "Cancelar las notificationes"
+  }
+}

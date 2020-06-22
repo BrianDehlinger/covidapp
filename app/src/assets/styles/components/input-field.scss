@@ -1,0 +1,13 @@
+.mdc-text-field {
+  margin-bottom: 1rem;
+}
+
+@media only screen and (max-width: 780px) {
+  label {
+    font-size: 0.7rem;
+  }
+
+  .mdc-text-field {
+    height: 48px !important;
+  }
+}

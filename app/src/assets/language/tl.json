@@ -1,0 +1,156 @@
+{
+  "lang_name": "Tagalog",
+  "language": "Wikang",
+  "fevermap_title": "COVIDstoplight",
+  "back": "Pabalik",
+  "today": "Ngayon",
+  "user_description": "Ikay ay isang %{age} taong gulang na %{gender}, na %{diagnosis} ",
+
+  "a_covid_diagnosis": "may positibong diagnosis ng COVID-19",
+  "no_covid_diagnosis": "walang positibong diagnosis ng COVID-19",
+
+  "landing": {
+    "about": "Tungkol sa",
+    "about_title": "Ano ang COVIDstoplight?",
+    "about_content_explanation": "COVIDstoplight is a web and mobile application created for simple and real-time data collection of the prevalence of COVID-19 in our communities.",
+    "about_current_methods": "Current methods of tracking the prevalence of the Corona virus do not yield a complete picture. Large masses remain untested to keep time and resources available for those in need.",
+    "about_solution": "COVIDstoplight is the solution for this problem. With COVIDstoplight, everone in the community can anonymously self-report symptoms they may be experiencing. This will allow experts to better estimate the true prevalence of COVID-19 infections in real-time and provide authorities with data that helps them make data-based, correct and timely decisions about protective measures.",
+    "about_data_collection": "The data collected by COVIDstoplight is anonymized and will be used to help with raising awareness of the current global situation.",
+    "about_current_participant_count": "To this day, %{participantCount} users have used Fevermap to report their symptoms. ",
+
+    "how_to_participate": "How do I participate?",
+    "participation_info": "It’s easy. You just report how you are feeling once a day, and - if you are willing - provide a little statistical information, such as the decade of your birth and zip code.",
+    "info_disclaimer": "We do not ask questions that could lead to you being recognized. We value your privacy and anonymity.",
+
+    "how_will_my_data_be_used": "How will my data be used?",
+    "data_use_explanation": "The data will be anonymized, after which it will be shared as open data through API interface."
+  },
+  "entry": {
+    "data_entry": "Data entry",
+    "first_entry_disclaimer": "Entries are submitted into the database based on your device. We would appreciate that you submitted your information from the same device every time. This will allow us to monitor your fever status better.",
+    "last_submission": "Last submission",
+    "submission_period_disclaimer": "To prevent unnecessary data, submissions are restricted to once every 12 hours.",
+    "sync_now": "Sync now",
+    "new_entry": "Health report",
+    "first_time_disclaimer": "As this is your first time using COVIDstoplight, we will ask you a few questions.",
+    "these_questions_wont_be_repeated": "These questions won't be repeated on future submissions.",
+    "queued_entries": "You have queued entries",
+    "send_now": "Send now",
+    "questions": {
+      "how_are_feeling":"How are you feeling?",
+      "feeling_very_good":"Healthy",
+      "feeling_not_so_good":"Not so good",
+      "feeling_sick":"Sick",
+      "what_is_your_temperature": "What's your temperature?",
+      "temperature": "Temperature",
+      "how_much": "How much?",
+      "degrees_of_fever": "%{degrees} of fever",
+      "havent_measured_but": "I haven't measured but...",
+      "feel_healthy": "I feel healthy",
+      "feel_feverish": "I feel feverish",
+      "set_temperature": "Set temperature",
+      "other_symptoms": "Other symptoms?",
+      "choose_all_that_apply": "Choose all that apply",
+      "cough": "Cough",
+      "difficulty_breathing": "Shortness of breath or difficulty breathing",
+      "fever":"Fever",
+      "headache": "Headache",
+      "chills": "Chills",
+      "sore_throat": "Sore throat",
+      "shaking": "Repeated shaking with chills",
+      "loss_of_taste": "New loss of taste or smell",
+      "muscular_pain": "Muscular pain",
+      "positive_covid_diagnosis": "I have a positive diagnosis of COVID-19.",
+      "set_symptoms": "Set symptoms",
+      "birth_year": "Birth year",
+      "birth_year_placeholder": "Decade of birth (years 1900 - 2020)",
+      "gender_in_passport": "Gender as stated in your passport or other government records",
+      "male": "Bulikil",
+      "female": "Babae",
+      "location_information": "Location information",
+      "whats_your_location": "What's your location?",
+      "city": "City",
+      "country": "Country",
+      "postal_code": "Zip code",
+      "location_determination_subtitle": "Location is determined using location API. Make sure to allow location sensors.",
+      "location_change_subtitle": "To update location information, update the value in the country and zip code field or press the button below.",
+      "update_location": "Update location",
+      "use_gps": "Get location from GPS",
+      "set_location_and_submit": "Set location and submit"
+    },
+    "previous_submissions": "Previous submissions",
+    "submit": "Submit",
+    "save": "Save",
+
+    "last_submission_was_done": "You last submission was made at %{date}",
+    "submission_count_text": "You have entered you fever information ",
+    "submission_count_times": "times",
+    "currently_holding_a_streak_of": "Your current consecutive days streak is: ",
+    "streak_days": "days"
+  },
+
+  "history": {
+    "title": "History",
+    "your_streak": "Your streak",
+    "days": "Days",
+    "total_entries": "Total entries",
+    "measurements": "measurement",
+    "add_entry": "Add entry"
+  },
+
+  "stats": {
+    "stats": "Stats"
+  },
+
+  "system_messages": {
+    "success": {
+      "location_update": "Location updated successfully",
+      "data_entry": "Successfully submitted data entry",
+      "offline_entry_queued": "Seems like you are offline. Entry has been queued.",
+      "entry_send_failed_queued": "Submission failed. Entry has been queued.",
+      "sync_finished": "Successfully synced entries.",
+      "subscribe_success": "Subscribed to push notifications successfully",
+      "unsubscribe_success": "Unsubscribed from push notifications successfully"
+    },
+    "error": {
+      "age_not_in_range": "Given birth year is not in the allowed range (1900 - 2020).",
+      "feeling_value_not_valid":"Unknow value for feeling",
+      "fever_temp_value_invalid": "The fever temperature value is not valid.",
+      "location_data_invalid": "The given location data is invalid.",
+      "api_data_invalid": "Data sent to the API was invalid.",
+      "gender_not_set": "Gender is not set.",
+      "do_not_submit_new_temp_until": "Do not submit a new temperature until %{dateTime}",
+      "subscribe_error": "Subscribing to push notifications failed",
+      "unsubscribe_error": "Unsubscribing from push notifications failed"
+    }
+  },
+  "dialog": {
+    "pwa_installer": {
+      "title": "Install Fevermap",
+      "content": "Fevermap can be installed as a Progressive Web Application. If installed, we can provide you with great extra features like faster runtime and push notifications (coming soon).",
+      "approve_text": "Install",
+      "decline_text": "Maybe later"
+    },
+    "notifications": {
+      "title": "Allow notifications",
+      "content": "Fevermap would like to offer you a daily notification reminding you to log your daily health status. Allow notifications?",
+      "approve_text": "Allow notifications",
+      "decline_text": "No please"
+    }
+  },
+
+  "notification": {
+    "daily_reminder": {
+      "title": "Good evening! \uD83D\uDE0A",
+      "content": "How are you feeling today?",
+      "healthy": "Healthy",
+      "sick": "Sick"
+    },
+    "thank_you": {
+      "title": "Successfully submitted data.",
+      "content": "Thank you for submitting!"
+    },
+    "subscribe_to_notifications": "Subscribe to notifications",
+    "unsubscribe_from_notifications": "Unsubscribe from notifications"
+  }
+}

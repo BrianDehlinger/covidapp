@@ -1,0 +1,20 @@
+/* RGB */
+:root {
+  --mdc-theme-primary: #0d47a1;
+  --mdc-theme-secondary: #1e88e5;
+  --mdc-theme-on-primary: #fff;
+  --mdc-theme-on-secondary: #000;
+}
+$green: #47802b;
+$yellow: #fdac07;
+$red: #ef6101;
+$blue: #0d47a1;
+$bluegreen: rgb(57, 181, 73);
+$bluegreenlighter: change-color($bluegreen, $lightness: 93%);
+$bluegreendarker: rgb(37, 147, 147);
+$deeppurple: rgb(159, 43, 104);
+$deeppurpledarker: rgb(133, 36, 87);
+$white: rgb(255, 255, 255);
+$lightgray: rgb(229, 229, 229);
+$gunmetal: rgb(31, 38, 42);
+$dark: rgb(11, 14, 15);
