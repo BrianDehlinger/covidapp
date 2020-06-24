@@ -27,8 +27,8 @@ def create_app():
     # Get database credentials from env or use default values
     engine = init_engine(
         os.environ.get(
-            'FEVERMAP_API_DATABASE_URI',
-            "mysql://fevermap:feverpass@database/fevermap?charset=utf8mb4"))
+            'STOPLIGHT_DATABASE_URI',
+            "mysql://stoplight:temppass@database/covidapp?charset=utf8mb4"))
 
     while True:
         try:

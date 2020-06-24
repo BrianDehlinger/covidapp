@@ -1,8 +1,8 @@
 # Covidapp back-end (API)
 
 The back-end server is a simple Python Flask app with MariaDB database for
-storage. The back-end exposes an API at `https://fevermap.net/api/` which the
-front-end communicates with JSON calls.
+storage. The back-end exposes an API at `https://covidapp.occ-pla.net/api/`
+which the front-end communicates with JSON calls.
 
 ## Development with Docker
 
@@ -20,52 +20,11 @@ http://localhost:9000 or more importantly, run `curl` or other requests against
 the API.
 
 To access the MariaDB shell, simply run
-`docker exec -it fevermap_database_1 mariadb -prootpass fevermap`.
+`docker exec -it covidapp_database_1 stoplight -prootpass temppass`.
 
 If you during testing want to empty either of the database tables, then run
 `TRUNCATE submissions;`. To completely wipe out existing database, run the above
 cycle to remove Docker volumes and restart everything.
-
-## Development with Podman
-
-In case you use [podman](https://podman.io/getting-started/) instead of docker,
-here are the steps to get similar environment running with podman as an admin
-user (sudo/root needed only for the time to install the tools):
-
-```
-sudo dnf install -y podman buildah
-buildah bud -t covidapp/api Dockerfile.openshift
-mkdir database
-podman pod create -n covidapp -p 9000:9000
-podman run --pod covidapp -d \
-  --name covidapp_db \
-  -e "MYSQL_ROOT_PASSWORD=rootpass" \
-  -e "MYSQL_DATABASE=fevermap" \
-  -e "MYSQL_USER=fevermap" \
-  -e "MYSQL_PASSWORD=feverpass" \
-  -v "database:/var/lib/mysql:z" \
-  ypcs/mariadb:latest
-podman run --pod covidapp -d \
-  --name covidapp_api \
-  -v ".:/app:z" \
-  -e "FEVERMAP_API_DATABASE_URI=mysql://fevermap:feverpass@127.0.0.1/fevermap?charset=utf8mb4" \
-  covidapp/api:latest
-```
-
-At the time (2020-03-22) the Debian based api container won't get built on
-RHEL/CentOS likely due kernel vs. userland mismatch. The build will fail with
-addgroup lock problem. I verified this works on Fedora 31 and 32 beta. The
-Dockerfile.openshift is fixed to work both older and newer kernels.
-
-For the rest of the guides, you can pretty much just replace docker command
-with podman.
-
-If you further want to take this to kubernetes, you get the kube yaml file
-by the following command:
-
-```
-podman generate kube covidapp > covidapp.yml
-```
 
 ## Production
 
@@ -73,23 +32,14 @@ podman generate kube covidapp > covidapp.yml
    database called 'covidapp'.
 
 2. Install and configure a Nginx instance that handles HTTPS encryption,
-   connection pooling, caching etc for backend on port 9000.
+   connection pooling, caching etc for backend on named UNIX socket.
 
 3. Start this API server by building a Docker container out of the sources and running it with:
 
-        docker build -t covidapp/api .
-        docker run -d --name covidapp_api --restart always -v "${PWD}:/app" -e FEVERMAP_API_DATABASE_URI="mysql://<user>:<password>@<database ip>/fevermap?charset=utf8mb4" -e ENV=production --expose 9000 covidapp/api
-
-The `docker` commands can be invoked by a regular user (e.g via CI system).
-Setting up MariaDB and Nginx requires root.
-
-See status with `docker logs --follow covidapp_api` and stop with `docker rm
-covidapp_api`. Modify at run time via `docker exec -it --user root covidapp_api
-bash`
-
 ## API endpoints and sample requests
 
-Example request as JSON object:
+Example request as JSON object (**TO BE UPDATED**):
+
 ```
 curl -iLsS \
   -X POST \
@@ -107,7 +57,6 @@ curl -iLsS \
   } ' \
   http://localhost:9000/api/v0/submit
 ```
-
 
 Example request as plain form data:
 ```
@@ -177,7 +126,7 @@ Example responses:
 }
 ```
 
-## Data model
+## Data model (**TO BE UPDATED**)
 
 Defined via Python SQLAlchemy that translate into MariaDB tables;
 ```

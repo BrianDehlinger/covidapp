@@ -38,7 +38,7 @@ test-api-stats:
 test-data-generate:
 	# Run test data generator inside the container, where it automatically has
 	# correct permissions to access the database directly (bypassing API).
-	docker exec -it fevermap_api_1 /app/test-data-generator.py
+	docker exec -it covidapp_api_1 /app/test-data-generator.py
 
 update-review:
 	# Ensure latest commit on named branch is checked out. 
@@ -68,22 +68,16 @@ build-app:
 build-api:
 	# Build container that runs the API
 	# This step is run in production (and staging) but also works for development.
-	cd api && docker build -t fevermap/api .
+	cd api && docker build -t covidapp/api .
 	@echo "----------- API build completed successfully -----------"
-
-build-push-api:
-    # Build container that runs the Push API
-    # This step is run in production (and staging) but also works for development.
-	cd push-api && docker build -t fevermap/push-api .
-	@echo "----------- Push API build completed successfully ------"
 
 run-api:
 	# Ensures the API server is running as a Docker container.
 	# This step is run in production (and staging).
-	docker stop fevermap_api || true # Ignore result, don't care if it was running already or not
-	docker rm fevermap_api || true # Ignore result, don't care if it was running already or not
-	cd api && docker run -d --name fevermap_api --restart always -v "${PWD}/api:/app" \
-		-e FEVERMAP_API_DATABASE_URI="${FEVERMAP_API_DATABASE_URI}" -e FLASK_ENV=production --expose 9000 fevermap/api
+	docker stop covidapp_api || true # Ignore result, don't care if it was running already or not
+	docker rm covidapp_api || true # Ignore result, don't care if it was running already or not
+	cd api && docker run -d --name covidapp_api --restart always -v "${PWD}/api:/app" \
+		-e STOPLIGHT_DATABASE_URI="${STOPLIGHT_DATABASE_URI}" -e FLASK_ENV=production --expose 9000 covidapp/api
 	sleep 5
 	docker logs fevermap_api
 	curl -iLsS "${API_URL}/v0/ping" | tee /tmp/ping-pong.log
@@ -92,4 +86,4 @@ run-api:
 
 # This step could be run in production (and staging). For local development,
 # just run `docker-composer up --build` instead.
-run: build-app build-api build-push-api run-api
+run: build-app build-api run-api

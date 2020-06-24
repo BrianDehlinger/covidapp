@@ -1,4 +1,4 @@
-const dbName = 'FeverMapDB';
+const dbName = 'STOPLIGHTDB';
 const versionNum = 3;
 
 export const FEVER_ENTRIES = 'feverEntries';

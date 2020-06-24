@@ -1,7 +1,7 @@
 {
   "lang_name": "English",
   "language": "Language",
-  "fevermap_title": "",
+  "covidapp_title": "",
   "back": "Back",
   "today": "Today",
   "user_description": "You are a %{age} year-old %{gender}, with %{diagnosis} diagnosis",
@@ -130,7 +130,7 @@
       "location_data_invalid": "The given location data is invalid.",
       "api_data_invalid": "Data sent to the API was invalid.",
       "gender_not_set": "Gender is not set.",
-      "do_not_submit_new_temp_until": "Do not submit a new temperature until %{dateTime}",
+      "do_not_submit_new_temp_until": "Please wait to submit your next report until %{dateTime}",
       "subscribe_error": "Subscribing to push notifications failed",
       "unsubscribe_error": "Unsubscribing from push notifications failed"
     }

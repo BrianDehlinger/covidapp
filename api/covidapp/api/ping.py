@@ -9,5 +9,4 @@ class PingResource(Resource):
     """
 
     def get(self):
-        return {'msg': 'Pong! For details on how to use this API see '
-                       'https://fevermap.net/'}
+        return {'msg': 'Pong!'}

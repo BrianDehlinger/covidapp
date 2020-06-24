@@ -42,14 +42,14 @@ services:
 
   # Database container is for development only, thus default credentials are ok
   # Access MariaDB console with:
-  #   docker exec -it covidapp_database_1 mysql -prootpass fevermap
+  #   docker exec -it covidapp_database_1 mysql -prootpass covidapp
   database:
     image: "mariadb:latest"
     environment:
       - MYSQL_ROOT_PASSWORD=rootpass
-      - MYSQL_DATABASE=fevermap
-      - MYSQL_USER=fevermap
-      - MYSQL_PASSWORD=feverpass
+      - MYSQL_DATABASE=covidapp
+      - MYSQL_USER=stoplight
+      - MYSQL_PASSWORD=temppass
     volumes:
       - "database:/var/lib/mysql:rw"
     ports:
