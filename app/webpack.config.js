@@ -11,7 +11,6 @@ const autoprefixer = require('autoprefixer');
 module.exports = env => {
   console.log('Running Webpack in NODE_ENV mode', env.NODE_ENV); // 'local'
   console.log('Using API_URL', env.API_URL); // true
-  console.log('Using PUSH_API_URL', env.PUSH_API_URL); // true
 
   return {
     entry: { main: './src/index.js' },
@@ -68,7 +67,6 @@ module.exports = env => {
     plugins: [
       new webpack.DefinePlugin({
         'process.env.API_URL': JSON.stringify(env.API_URL),
-        'process.env.PUSH_API_URL': JSON.stringify(env.PUSH_API_URL),
       }),
       autoprefixer,
       new CleanWebpackPlugin({

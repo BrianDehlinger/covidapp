@@ -544,7 +544,7 @@ class DataView extends LitElement {
                   <div class="previous-submission">
                     <div class="previous-submission--data-row">
                       <p class="previous-submission--data-row__date">
-                        ${dayjs(sub.timestamp).format('ddd MM.DD h A')}
+                        ${dayjs(sub.timestamp).format('ddd MM/DD h A')}
                       </p>
                     </div>
                     <div class="previous-submission--symptom-row">

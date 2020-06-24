@@ -86,7 +86,7 @@ class FeelingChart extends LitElement {
     const dateLabels = [];
 
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const colors = ['red', 'yellow', 'green'];
+    const colors = ['red', 'orange', 'green'];
 
     const dataValues = [];
     const backgroudColors = [];
