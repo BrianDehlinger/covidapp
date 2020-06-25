@@ -2,8 +2,8 @@
 Description=uWSGI instance to serve myapp
 
 [Service]
-ExecStartPre=-/usr/bin/bash -c 'mkdir -p /run/uwsgi; chown user:nginx /run/uwsgi'
-ExecStart=/usr/bin/bash -c 'cd /home/user/myapp; source myappenv/bin/activate; uwsgi --ini myapp.ini'
+ExecStartPre=-/usr/bin/bash -c 'mkdir -p /run/uwsgi; chown admin:www-data /run/uwsgi'
+ExecStart=/usr/bin/bash -c 'cd /home/admin/covidapp/api; uwsgi --ini covidapp.ini'
 
 [Install]
 WantedBy=multi-user.target
