@@ -19,7 +19,7 @@ systemctl enable nginx
 apt-get --assume-yes install npm
 cd /home/admin/covidapp/app && npm install && npm run build
 mkdir -p /var/www/covidstoplight.org/html
-cp /home/admin/covidapp/dist/* /var/www/covidstoplight.org/html
+cp /home/admin/covidapp/app/dist/* /var/www/covidstoplight.org/html
 chown -R admin:www-data /var/www/covidstoplight.org/html
 cp nginx.conf /etc/nginx/sites-available/covidstoplight.org
 ln -s /etc/nginx/sites-available/covidstoplight.org /etc/nginx/sites-enabled/

@@ -1,18 +1,5 @@
 @import '../palette';
 
-.cookie-message {
-  z-index: 13;
-  height: 20%;
-
-  p {
-    margin: 15px;
-
-    .mdc-button {
-      background: $blue;
-    }
-  }
-}
-
 .covidapp-navigation-wrapper {
   width: 100%;
   height: 11%;
@@ -54,6 +41,44 @@
       margin: 0 0 0.5rem 0;
     }
   }
+
+  .cookie-message {
+    z-index: 13;
+    height: 20%;
+    background-color: #036;
+
+    p {
+      margin: 10px;
+      color: #fff;
+      a {
+        color: #ddd;
+      }
+
+      .mdc-button {
+        background-color: $white;
+        color: #036;
+      }
+    }
+  }
+}
+
+.cookie-message {
+  z-index: 13;
+  height: 20%;
+  background-color: #036;
+
+  p {
+    margin: 10px;
+    color: #fff;
+    a {
+      color: #ddd;
+    }
+
+    .mdc-button {
+      background-color: $white;
+      color: #036;
+    }
+  }
 }
 
 @media only screen and (max-width: 400px) {
@@ -68,9 +93,19 @@
   .cookie-message {
     z-index: 13;
     height: 20%;
+    background-color: #036;
 
     p {
       margin: 10px;
+      color: #fff;
+      a {
+        color: #ddd;
+      }
+
+      .mdc-button {
+        background-color: $white;
+        color: #036;
+      }
     }
   }
 }
