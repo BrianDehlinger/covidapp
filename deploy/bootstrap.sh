@@ -21,7 +21,7 @@ cd /home/admin/covidapp/app && npm install && npm run build
 mkdir -p /var/www/covidstoplight.org/html
 cp -r /home/admin/covidapp/app/dist/* /var/www/covidstoplight.org/html
 chown -R admin:www-data /var/www/covidstoplight.org/html
-cp nginx.conf /etc/nginx/sites-available/covidstoplight.org
+cp /home/admin/covidapp/deploy/nginx.conf /etc/nginx/sites-available/covidstoplight.org
 ln -s /etc/nginx/sites-available/covidstoplight.org /etc/nginx/sites-enabled/
 systemctl restart nginx
 
