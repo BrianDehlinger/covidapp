@@ -163,8 +163,8 @@ class CovidappNavigation extends LitElement {
       ${!this.cookieAcceptance ? html`<div class="covidapp-navigation-wrapper cookie-message mdc-elevation--z6">
             <p>
             By continuing to use this service you agree that you understand 
-            and accept our <a href="https://pandemicresponsecommons.org/wp-content/uploads/2020/04/02-PRDC-IPR-20-v1.pdf"> Terms </a> 
-            and <a href="https://pandemicresponsecommons.org/wp-content/uploads/2020/04/02-PRDC-IPR-20-v1.pdf"> Privacy Policy.</a>
+            and accept our  
+            <a href="http://pandemicresponsecommons.org/wp-content/uploads/2020/06/CCSR-Privacy-Policy-2020-06-28.pdf" target="_blank"> Privacy Policy.</a>
             <p>
             <button class="mdc-button mdc-button--raised" @click="${this.setCookieAcceptance}">
             <div class="mdc-button__ripple"></div>
