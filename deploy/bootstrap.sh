@@ -41,4 +41,4 @@ apt-get --assume-yes install \
 
 mkdir -p /run/uwsgi
 chown admin:www-data /run/uwsgi
-nohup uwsgi --ini /home/admin/covidapp/api/covidapp.ini &
+STOPLIGHT_DATABASE_URI=$STOPLIGHT_DATABASE_URI nohup uwsgi --ini /home/admin/covidapp/api/covidapp.ini &

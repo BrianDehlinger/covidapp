@@ -203,7 +203,7 @@ resource "aws_db_instance" "stoplightdb" {
   }
 }
 
-resource "aws_lb" "covidstoplight-net" {
+resource "aws_lb" "covidstoplight-org" {
     drop_invalid_header_fields = false
     enable_deletion_protection = false
     enable_http2               = true
@@ -211,7 +211,7 @@ resource "aws_lb" "covidstoplight-net" {
     internal                   = false
     ip_address_type            = "ipv4"
     load_balancer_type         = "application"
-    name                       = "covidstoplight-net"
+    name                       = "covidstoplight-org"
     security_groups            = [aws_security_group.stoplight_web.id]
     subnets                    = [aws_subnet.stoplight_public.id, aws_subnet.stoplight_private_two.id]
     tags                       = {}
@@ -233,7 +233,7 @@ resource "aws_lb_target_group_attachment" "stoplight" {
 }
 
 #resource "aws_lb_listener" "stoplight-https" {
-#  load_balancer_arn = aws_lb.covidstoplight-net.arn
+#  load_balancer_arn = aws_lb.covidstoplight-org.arn
 #  port              = "443"
 #  protocol          = "HTTPS"
 #  ssl_policy        = "ELBSecurityPolicy-2016-08"
@@ -246,7 +246,7 @@ resource "aws_lb_target_group_attachment" "stoplight" {
 #}
 
 resource "aws_lb_listener" "stoplight-http" {
-  load_balancer_arn = aws_lb.covidstoplight-net.arn
+  load_balancer_arn = aws_lb.covidstoplight-org.arn
   port              = "80"
   protocol          = "HTTP"
 
@@ -307,7 +307,7 @@ resource "aws_instance" "stoplight" {
       "sudo apt-get --assume-yes install git",
       "chmod 400 .ssh/id_rsa",
       "git clone -b deployment git@github.com:occ-data/covidapp.git",
-      "sudo API_URL=\"http://${aws_lb.covidstoplight-net.dns_name}\" STOPLIGHT_DATABASE_URI=\"mysql://${aws_db_instance.stoplightdb.username}:${aws_db_instance.stoplightdb.password}@${aws_db_instance.stoplightdb.address}/${aws_db_instance.stoplightdb.name}?charset=utf8mb4\" /home/admin/covidapp/deploy/bootstrap.sh"
+      "sudo API_URL=\"http://${aws_lb.covidstoplight-org.dns_name}\" STOPLIGHT_DATABASE_URI=\"mysql://${aws_db_instance.stoplightdb.username}:${aws_db_instance.stoplightdb.password}@${aws_db_instance.stoplightdb.address}/${aws_db_instance.stoplightdb.name}?charset=utf8mb4\" /home/admin/covidapp/deploy/bootstrap.sh"
     ]
   }
   depends_on = [aws_db_instance.stoplightdb]
@@ -321,5 +321,5 @@ output "web_server_address" {
   value = aws_instance.stoplight.public_dns
 }
 output "load_balancer_address" {
-  value = aws_lb.covidstoplight-net.dns_name
+  value = aws_lb.covidstoplight-org.dns_name
 }
