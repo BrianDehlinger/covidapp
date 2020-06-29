@@ -41,3 +41,4 @@ apt-get --assume-yes install \
 
 mkdir -p /run/uwsgi
 chown admin:www-data /run/uwsgi
+nohup uwsgi --ini /home/admin/covidapp/api/covidapp.ini &
