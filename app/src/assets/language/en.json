@@ -8,16 +8,15 @@
   "no_demographics": "You did not enter your demographic information. Click on pencil icon to add the information",
   "a_covid_diagnosis": "positive COVID-19",
   "no_covid_diagnosis": "no positive COVID-19",
+
   "cookie": {
-    "acceptance_message": "This website uses cookies to provide you a rich user experience. By continuing to use this website you are giving consent to cookies being used.",
     "button_text": "Got it, thanks!"
   },
+
   "landing": {
     "about": "About",
     "about_title": "Welcome to COVIDstoplight",
     "about_content_explanation": "If you have a smart phone or a computer you have the power to help save lives in your community.",
-    "about_current_methods": "",
-    "about_solution": "",
     "about_data_collection": "Make a difference by answering one or two questions at least once a day (while at home, when at work, or out and about) to indicate how you’re feeling and where you are at that moment. This simple sharing of information will help the understanding and control of COVID-19.",
     "about_current_participant_count": "To date, %{participantCount} people in Illinois have used COVIDstoplight to report their symptoms. ",
 
@@ -26,8 +25,7 @@
     "info_disclaimer": "We do not ask questions that could lead to you being recognized. We value your privacy and anonymity.",
 
     "how_will_my_data_be_used": "How will this information be used?",
-    "data_use_explanation": "The data from everyone using COVIDstoplight will be combined and the aggregated results used to inform models of disease spread. The aggregated results will be made available to members of the Pandemic Response Commons Consortium.",
-    "about_fevermap": "This app derives from the excellent work of the Fevermap team."
+    "data_use_explanation": "The data from everyone using COVIDstoplight will be combined and the aggregated results used to inform models of disease spread. The aggregated results will be made available to members of the Pandemic Response Commons Consortium."
   },
   "entry": {
     "data_entry": "Health Report",
@@ -36,7 +34,6 @@
     "sync_now": "Sync now",
     "new_entry": "Health Report",
     "first_time_disclaimer": "As this is your first time using COVIDstoplight, we would like to ask you a few questions.",
-    "these_questions_wont_be_repeated": "These questions won't be repeated on future submissions.",
     "queued_entries": "You have queued entries",
     "send_now": "Send now",
     "questions": {
@@ -53,19 +50,18 @@
       "headache": "Headache",
       "chills": "Chills",
       "sore_throat": "Sore throat",
-      "shaking": "Repeated shaking with chills",
+      "shaking": "Nausea or diarrhea",
       "loss_of_taste": "New loss of taste or smell",
       "muscular_pain": "Muscle pain",
       "positive_covid_diagnosis": "I have a positive diagnosis of COVID-19.",
       "set_symptoms": "Continue",
       "birth_year": "Birth year",
       "birth_year_placeholder": "Decade of birth (years 1900 - 2020)",
-      "gender_in_passport": "Gender as stated in your passport or other government records",
+      "gender_in_passport": "Gender",
       "male": "Male",
       "female": "Female",
       "whats_your_location": "What's your location?",
       "city": "City",
-      "country": "Country",
       "postal_code": "Zip code",
       "location_change_subtitle": "Enter your location in the zip code field or press the button below.",
       "update_location": "Update location",
@@ -86,8 +82,8 @@
     "your_streak": "Your streak",
     "days": "days",
     "total_entries": "Total entries",
-    "achievement_title": "Your achievements",
     "measurements": "reports",
+    "achievement_title": "Your achievements",
     "no_achievements_message": "You can earn badges for reporting continuously.",
     "add_entry": "New report"
   },
@@ -130,9 +126,5 @@
       "approve_text": "Allow Location Access",
       "decline_text": "I will enter manually"
     }
-  },
-  "social": {
-    "quote": "I just contributed to greater good",
-    "share_button_text": "share"
   }
 }

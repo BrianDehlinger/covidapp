@@ -23,6 +23,7 @@ cp -r /home/admin/covidapp/app/dist/* /var/www/covidstoplight.org/html
 chown -R admin:www-data /var/www/covidstoplight.org/html
 cp /home/admin/covidapp/deploy/nginx.conf /etc/nginx/sites-available/covidstoplight.org
 ln -s /etc/nginx/sites-available/covidstoplight.org /etc/nginx/sites-enabled/
+rm /etc/nginx/sites-enabled/default
 systemctl restart nginx
 
 ##
@@ -38,3 +39,5 @@ apt-get --assume-yes install \
     uwsgi \
     uwsgi-plugin-python3
 
+mkdir -p /run/uwsgi
+chown admin:www-data /run/uwsgi

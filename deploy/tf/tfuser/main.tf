@@ -29,11 +29,7 @@ data "aws_iam_policy_document" "stoplight" {
   }
 
   statement {
-    actions = ["elasticloadbalancing:CreateLoadBalancer",
-               "elasticloadbalancing:CreateTargetGroup",
-               "elasticloadbalancing:RegisterTargets",
-               "elasticloadbalancing:SetIpAddressType",
-               "elasticloadbalancing:SetSubnets"]
+    actions = ["elasticloadbalancing:*"]
     resources = ["*"]
   }
 }

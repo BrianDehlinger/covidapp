@@ -56,10 +56,6 @@ class LandingView extends LitElement {
               )}
             </p>
             <p>
-              ${Translator.get('landing.about_current_methods')}
-            </p>
-            <p>${Translator.get('landing.about_solution')}</p>
-            <p>
               ${Translator.get('landing.about_data_collection')}
             </p>
             ${this.currentParticipantCount > 2000
