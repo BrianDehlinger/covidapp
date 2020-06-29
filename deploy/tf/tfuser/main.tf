@@ -1,5 +1,5 @@
 provider "aws" {
-  profile = "occ"
+  profile = "covid19"
   region = "us-east-2"
 }
 

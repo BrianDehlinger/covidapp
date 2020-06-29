@@ -1,9 +1,9 @@
 variable "vpc_cidr" { default = "10.0.0.0/16" }
-variable "subnet_one_cidr" { default = "10.0.1.0/24" }
+variable "subnet_one_cidr" { default = ["10.0.1.0/24", "10.0.4.0/24"] }
 variable "subnet_two_cidr" { default = ["10.0.2.0/24", "10.0.3.0/24"] }
 variable "route_table_cidr" { default = "0.0.0.0/0" }
 variable "host" {default = "aws_instance.my_web_instance.public_dns"}
-variable "web_ports" { default = ["22", "80", "443"] }
+variable "web_ports" { default = ["22", "80", "443", "3306"] }
 variable "db_ports" { default = ["22", "3306"] }
 
 provider "aws" {
@@ -23,11 +23,21 @@ resource "aws_vpc" "stoplight" {
 
 resource "aws_subnet" "stoplight_public" {
   vpc_id                  = aws_vpc.stoplight.id
-  cidr_block              = var.subnet_one_cidr
+  cidr_block              = element(var.subnet_one_cidr, 0)
   availability_zone       = data.aws_availability_zones.availability_zones.names[0]
   map_public_ip_on_launch = true
   tags = {
     Name = "stoplight_public"
+  }
+}
+
+resource "aws_subnet" "stoplight_public_two" {
+  vpc_id                  = aws_vpc.stoplight.id
+  cidr_block              = element(var.subnet_one_cidr, 1)
+  availability_zone       = data.aws_availability_zones.availability_zones.names[1]
+  map_public_ip_on_launch = true
+  tags = {
+    Name = "stoplight_public_two"
   }
 }
 
@@ -85,9 +95,14 @@ resource "aws_default_route_table" "stoplight" {
   }
 }
 
-## associate public subnet with public route table
+## associate public subnets with public route table
 resource "aws_route_table_association" "stoplight_public" {
   subnet_id      = aws_subnet.stoplight_public.id
+  route_table_id = aws_route_table.stoplight_public.id
+}
+
+resource "aws_route_table_association" "stoplight_public_two" {
+  subnet_id      = aws_subnet.stoplight_public_two.id
   route_table_id = aws_route_table.stoplight_public.id
 }
 
@@ -183,7 +198,7 @@ resource "aws_db_instance" "stoplightdb" {
   storage_type         = "gp2"
   engine               = "mysql"
   engine_version       = "5.7.19"
-  instance_class       = "db.t2.micro"
+  instance_class       = "db.t2.small"
   allocated_storage    = 5
   storage_encrypted    = false
   name                 = "covidapp"
@@ -213,7 +228,7 @@ resource "aws_lb" "covidstoplight-org" {
     load_balancer_type         = "application"
     name                       = "covidstoplight-org"
     security_groups            = [aws_security_group.stoplight_web.id]
-    subnets                    = [aws_subnet.stoplight_public.id, aws_subnet.stoplight_private_two.id]
+    subnets                    = [aws_subnet.stoplight_public.id, aws_subnet.stoplight_public_two.id]
     tags                       = {}
 
     timeouts {}
@@ -232,18 +247,18 @@ resource "aws_lb_target_group_attachment" "stoplight" {
     port             = 80
 }
 
-#resource "aws_lb_listener" "stoplight-https" {
-#  load_balancer_arn = aws_lb.covidstoplight-org.arn
-#  port              = "443"
-#  protocol          = "HTTPS"
-#  ssl_policy        = "ELBSecurityPolicy-2016-08"
-#  certificate_arn   = "arn:aws:iam::187416307283:server-certificate/test_cert_rab3wuqwgja25ct3n4jdj2tzu4"
-#
-#  default_action {
-#    type             = "forward"
-#    target_group_arn = aws_lb_target_group.stoplight.arn
-#  }
-#}
+resource "aws_lb_listener" "stoplight-https" {
+  load_balancer_arn = aws_lb.covidstoplight-org.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = "arn:aws:acm:us-east-2:236714345101:certificate/82fc0a8f-ae8a-4de4-917e-1c29e5e43662"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.stoplight.arn
+  }
+}
 
 resource "aws_lb_listener" "stoplight-http" {
   load_balancer_arn = aws_lb.covidstoplight-org.arn
@@ -251,25 +266,20 @@ resource "aws_lb_listener" "stoplight-http" {
   protocol          = "HTTP"
 
   default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.stoplight.arn
-  }
+    type = "redirect"
 
-#  default_action {
-#    type = "redirect"
-#
-#    redirect {
-#      port        = "443"
-#      protocol    = "HTTPS"
-#      status_code = "HTTP_301"
-#    }
-#  }
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
 }
 
 resource "aws_instance" "stoplight" {
   key_name      = aws_key_pair.example.key_name
   ami           = "ami-0806f7fe82d5b1455"
-  instance_type = "t2.micro"
+  instance_type = "t2.small"
   vpc_security_group_ids = [aws_security_group.stoplight_web.id]
   subnet_id              = aws_subnet.stoplight_public.id
   tags = {

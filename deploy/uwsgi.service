@@ -1,5 +1,5 @@
 [Unit]
-Description=uWSGI instance to serve myapp
+Description=uWSGI instance to serve COVIDstoplight API
 
 [Service]
 ExecStartPre=-/usr/bin/bash -c 'mkdir -p /run/uwsgi; chown admin:www-data /run/uwsgi'
