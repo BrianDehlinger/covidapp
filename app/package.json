@@ -11,7 +11,7 @@
     "lint": "npm run lint:eslint",
     "format": "npm run format:eslint",
     "check": "npm run format && npm run lint",
-    "build": "webpack --mode production --env.NODE_ENV=production --env.API_URL=https://covidapp.occ-pla.net",
+    "build": "webpack --mode production --env.NODE_ENV=production --env.API_URL=$API_URL",
     "dev": "webpack --mode development"
   },
   "author": "",
