@@ -307,7 +307,7 @@ resource "aws_instance" "stoplight" {
       "sudo apt-get --assume-yes install git",
       "chmod 400 .ssh/id_rsa",
       "git clone -b deployment git@github.com:occ-data/covidapp.git",
-      "sudo API_URL=\"http://${aws_lb.covidstoplight-net.dns_name} STOPLIGHT_DATABASE_URI=\"mysql://${aws_db_instance.stoplightdb.username}:${aws_db_instance.stoplightdb.password}@${aws_db_instance.stoplightdb.address}/${aws_db_instance.stoplightdb.name}?charset=utf8mb4\" /home/admin/covidapp/deploy/bootstrap.sh"
+      "sudo API_URL=\"http://${aws_lb.covidstoplight-net.dns_name}\" STOPLIGHT_DATABASE_URI=\"mysql://${aws_db_instance.stoplightdb.username}:${aws_db_instance.stoplightdb.password}@${aws_db_instance.stoplightdb.address}/${aws_db_instance.stoplightdb.name}?charset=utf8mb4\" /home/admin/covidapp/deploy/bootstrap.sh"
     ]
   }
   depends_on = [aws_db_instance.stoplightdb]
