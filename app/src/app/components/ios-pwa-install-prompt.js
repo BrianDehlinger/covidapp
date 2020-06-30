@@ -17,7 +17,7 @@ class IosPwaInstallPrompt extends LitElement {
         <div class="ios-pwa-install-prompt mdc-elevation--z3">
           <img src="${shareImage}" />
           <p>
-            To install Covidapp on your device, press the share button and then "Add to homescreen"
+            To install COVIDstoplight on your device, tap the Share button in the browser and then tap "Add to Homescreen".
           </p>
         </div>
       </div>

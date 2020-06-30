@@ -33,7 +33,7 @@
     "submission_period_disclaimer": "To prevent unnecessary data, submissions are restricted to once every 12 hours.",
     "sync_now": "Sync now",
     "new_entry": "Health Report",
-    "first_time_disclaimer": "As this is your first time using COVIDstoplight, we would like to ask you a few questions.",
+    "first_time_disclaimer": "As this is your first time using COVIDstoplight, we would like to ask you a few questions. You may skip these if you prefer.",
     "queued_entries": "You have queued entries",
     "send_now": "Send now",
     "questions": {

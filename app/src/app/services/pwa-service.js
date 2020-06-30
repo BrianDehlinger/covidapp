@@ -10,11 +10,11 @@ export default class PWAService {
     PWAService._instance = new PWAService(deferredPrompt);
   }
 
-  /**
-   * PWAService._instance is initialized, if a install prompt has
+  /*
+   * PWAService._instance is initialized if an install prompt has
    * been caught and deferred.
    *
-   * However on iOS, this prompt is not launched, so we need to check on iOS devices
+   * On iOS, however, this prompt is not launched, so we need to check 
    * if the device is an iOS device and if it's already running PWA
    *
    * @returns Is the page installable as a PWA
@@ -27,11 +27,11 @@ export default class PWAService {
   }
 
   static launchInstallDialog() {
-    if (!PWAService._instance) {
+    if (PWAService.isIos() && !PWAService.isInStandaloneMode()) {
+      PWAService.openIosDialog();
       return;
     }
-    if (PWAService.isIos()) {
-      PWAService._instance.openIosDialog();
+    if (!PWAService._instance) {
       return;
     }
     PWAService._instance.openInstallDialog();
@@ -57,7 +57,7 @@ export default class PWAService {
     });
   }
 
-  openIosDialog() {
+  static openIosDialog() {
     const iosBanner = document.createElement('ios-pwa-install-prompt');
     document.body.append(iosBanner);
   }
