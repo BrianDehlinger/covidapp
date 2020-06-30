@@ -1,6 +1,7 @@
 /* eslint-disable class-methods-use-this,no-param-reassign */
 import { LitElement, html } from 'lit-element';
 import Translator from '../util/translator.js';
+import DataEntryService from '../services/data-entry-service.js';
 
 class CovidappNavigation extends LitElement {
   static get properties() {
@@ -20,6 +21,7 @@ class CovidappNavigation extends LitElement {
     this.currentViewNavigationOrder = 1;
     this.rootElem = null;
     this.cookieAcceptance = false;
+    this.currentParticipantCount = 0;
   }
 
   firstUpdated() {
@@ -37,6 +39,12 @@ class CovidappNavigation extends LitElement {
     else{
       this.cookieAcceptance = false;
     }
+    this.getCurrentStats();
+  }
+
+  async getCurrentStats() {
+    const stats = await DataEntryService.getStats();
+    this.currentParticipantCount = stats ? stats.data.submitters.total : 0;
   }
 
   handleNavigationClick(e) {
@@ -107,17 +115,6 @@ class CovidappNavigation extends LitElement {
 
   render() {
     return html`
-      ${!this.cookieAcceptance ? html`<div class="covidapp-navigation-wrapper cookie-message mdc-elevation--z5">
-            <p>${Translator.get('cookie.acceptance_message')}
-            <button class="mdc-button mdc-button--raised" @click="${this.setCookieAcceptance}">
-            <div class="mdc-button__ripple"></div>
-  
-            <i class="material-icons mdc-button__icon" aria-hidden="true">done</i>
-            <span class="mdc-button__label">${Translator.get('cookie.button_text')}</span>
-          </button>
-          </p>
-          </div>`:''}
-      
       <div class="covidapp-navigation-wrapper mdc-elevation--z5">
         <div
           tabindex="0"
@@ -145,6 +142,8 @@ class CovidappNavigation extends LitElement {
           <material-icon icon="person"></material-icon>
           <p>${Translator.get('entry.data_entry')}</p>
         </div>
+        ${this.currentParticipantCount > 2000 ?
+        html`
         <div
           tabindex="0"
           @click="${this.handleNavigationClick}"
@@ -158,7 +157,23 @@ class CovidappNavigation extends LitElement {
           <material-icon icon="assessment"></material-icon>
           <p>${Translator.get('stats.stats')}</p>
         </div>
+           `
+        : ''}
       </div>
+      ${!this.cookieAcceptance ? html`<div class="covidapp-navigation-wrapper cookie-message mdc-elevation--z6">
+            <p>
+            By continuing to use this service you agree that you understand 
+            and accept our  
+            <a href="http://pandemicresponsecommons.org/wp-content/uploads/2020/06/CCSR-Privacy-Policy-2020-06-28.pdf" target="_blank"> Privacy Policy.</a>
+            <p>
+            <button class="mdc-button mdc-button--raised" @click="${this.setCookieAcceptance}">
+            <div class="mdc-button__ripple"></div>
+  
+            <i class="material-icons mdc-button__icon" aria-hidden="true">done</i>
+            <span class="mdc-button__label">${Translator.get('cookie.button_text')}</span>
+          </button>
+          </p>
+          </div>`:''}
     `;
   }
 

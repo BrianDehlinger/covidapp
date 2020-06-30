@@ -37,7 +37,7 @@ def create_app():
             break
         except sqlalchemy.exc.OperationalError as error:
             app.logger.warning(
-                "Database connectiong failed due to: {}".format(error))
+                "Database connection failed due to: {}".format(error))
             app.logger.warning("Trying again...")
             time.sleep(3)
 

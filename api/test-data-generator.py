@@ -243,7 +243,7 @@ def submit_record(submissions, randomizations_left):
 
 # Connect to development database
 mariadb_connection = mariadb.connect(
-    user='fevermap', password='feverpass', database='fevermap',
+    user='stoplight', password='temppass', database='covidapp',
     port=3306, host='covidapp_database_1')
 
 cursor_submitter = mariadb_connection.cursor()

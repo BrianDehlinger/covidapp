@@ -1,6 +1,7 @@
 import { LitElement, html } from 'lit-element';
 import Translator from '../util/translator.js';
 import logoImg from '../../assets/images/landing-logo.png';
+import PRCImg from '../../assets/images/prc-logo.png';
 import DataEntryService from '../services/data-entry-service.js';
 import PWAService from '../services/pwa-service.js';
 import '../components/ios-pwa-install-prompt.js';
@@ -55,10 +56,6 @@ class LandingView extends LitElement {
               )}
             </p>
             <p>
-              ${Translator.get('landing.about_current_methods')}
-            </p>
-            <p>${Translator.get('landing.about_solution')}</p>
-            <p>
               ${Translator.get('landing.about_data_collection')}
             </p>
             ${this.currentParticipantCount > 2000
@@ -85,8 +82,8 @@ class LandingView extends LitElement {
             <h2>${Translator.get('landing.how_will_my_data_be_used')}</h2>
             <p>${Translator.get('landing.data_use_explanation')}</p>
           </div>
-          <p>${Translator.get('landing.about_fevermap')}</p>
-          <a href="https://fevermap.net">>> Fevermap.net</a>
+          <a href="https://pandemicresponsecommons.org">
+            <img src="${PRCImg}" alt="PRC logo" class="responsive" align="center"/></a>
         </div>
       </div>
     `;

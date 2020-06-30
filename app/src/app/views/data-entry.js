@@ -769,7 +769,6 @@ class DataEntry extends LitElement {
       <div class="title-holder">
         <h2>${Translator.get('entry.new_entry')}</h2>
         <p class="subtitle">${Translator.get('entry.first_time_disclaimer')}</p>
-        <p class="subtitle">${Translator.get('entry.these_questions_wont_be_repeated')}</p>
       </div>
       ${this.getYearOfBirthInput()} ${this.getGenderInput()}
       <div style="display:flex">
