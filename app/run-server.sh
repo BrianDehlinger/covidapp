@@ -3,13 +3,17 @@
 # This helper script is only run in development. I production we just ship the
 # static dist/ produced by the build. Therevore the local developemnt environment
 # and API_URL are hard-coded in this script.
-export API_URL="http://localhost:9000" #sindhura to use "http://192.168.99.100:9000" for her dev box
+export API_URL="http://localhost:9000" 
+export TERMS_URL="https://pandemicresponsecommons.org/wp-content/uploads/2020/07/CCSR-Terms-of-Use.pdf"
+export PRIVACY_URL="https://pandemicresponsecommons.org/wp-content/uploads/2020/07/CCSR-Privacy-Policy.pdf"
+
+echo node node_modules/webpack-cli/bin/cli.js -w --mode development --env.NODE_ENV=development --env.API_URL=$API_URL --env.TERMS_URL=$TERMS_URL --env.PRIVACY_URL=$PRIVACY_URL
 
 devserverJobId=NULL
 webpackJobId=NULL
 
 run_webpack () {
-	node node_modules/webpack-cli/bin/cli.js -w --mode development --env.NODE_ENV=development --env.API_URL=$API_URL &
+	node node_modules/webpack-cli/bin/cli.js -w --mode development --env.NODE_ENV=development --env.API_URL=$API_URL --env.TERMS_URL=$TERMS_URL --env.PRIVACY_URL=$PRIVACY_URL&
 	webpackJobId=$!
 }
 

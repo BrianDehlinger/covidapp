@@ -11,6 +11,8 @@ const autoprefixer = require('autoprefixer');
 module.exports = env => {
   console.log('Running Webpack in NODE_ENV mode', env.NODE_ENV); // 'local'
   console.log('Using API_URL', env.API_URL); // true
+  console.log('Using TERMS_URL', env.TERMS_URL); // true
+  console.log('Using PRIVACY_URL', env.PRIVACY_URL); // true
 
   return {
     entry: { main: './src/index.js' },

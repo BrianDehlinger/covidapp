@@ -735,6 +735,7 @@ class DataEntry extends LitElement {
 
       >
         ${this.getFeelingSelector()}
+         <div class="policy-link"><a href="https://pandemicresponsecommons.org/wp-content/uploads/2020/07/CCSR-Privacy-Policy.pdf" target="_blank">Privacy Policy</a></div>
       </div>
       <div
         class="entry-window mdc-elevation--z9 other-symptoms-questions"
@@ -742,9 +743,11 @@ class DataEntry extends LitElement {
         tabindex="0"
       >
         ${this.getSymptomsFields()}
+         <div class="policy-link"><a href="https://pandemicresponsecommons.org/wp-content/uploads/2020/07/CCSR-Privacy-Policy.pdf" target="_blank">Privacy Policy</a></div>
       </div>
       <div class="entry-window mdc-elevation--z9" id="question-3" tabindex="0">
         ${this.getPersonalQuestions()}
+         <div class="policy-link"><a href="https://pandemicresponsecommons.org/wp-content/uploads/2020/07/CCSR-Privacy-Policy.pdf" target="_blank">Privacy Policy</a></div>
       </div>
       
       
@@ -754,6 +757,7 @@ class DataEntry extends LitElement {
         tabindex="0"
       >
         ${this.getGeoLocationInput()}
+         <div class="policy-link"><a href="https://pandemicresponsecommons.org/wp-content/uploads/2020/07/CCSR-Privacy-Policy.pdf" target="_blank">Privacy Policy</a></div>
       </div>
     `;
   }

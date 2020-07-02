@@ -16,10 +16,13 @@ npm install
 # container in directory app/node_modules, but right now we will just live with
 # it.
 
+export API_URL="http://localhost:9000" 
+export TERMS_URL="https://pandemicresponsecommons.org/wp-content/uploads/2020/07/CCSR-Terms-of-Use.pdf"
+export PRIVACY_URL="https://pandemicresponsecommons.org/wp-content/uploads/2020/07/CCSR-Privacy-Policy.pdf"
+
 # Run webpack in development mode (this Dockerfile is only for development use)
 node node_modules/webpack-cli/bin/cli.js -w --mode development \
-  --env.NODE_ENV="development" --env.API_URL="http://localhost:9000" &
-   #sindhura: API URL http://192.168.99.100:9000
+  --env.NODE_ENV="development" --env.API_URL=$API_URL --env.TERMS_URL=$TERMS_URL --env.PRIVACY_URL=$PRIVACY_URL&
 # NOTE! The built files will end up with root ownership outside of the container
 # in directory app/dist, but right now we will just live with it.
 

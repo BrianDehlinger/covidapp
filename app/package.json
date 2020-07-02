@@ -11,7 +11,7 @@
     "lint": "npm run lint:eslint",
     "format": "npm run format:eslint",
     "check": "npm run format && npm run lint",
-    "build": "webpack --mode production --env.NODE_ENV=production --env.API_URL=$API_URL",
+    "build": "webpack --mode production --env.NODE_ENV=production --env.API_URL=$API_URL --env.TERMS_URL=$TERMS_URL --env.PRIVACY_URL=$PRIVACY_URL",
     "dev": "webpack --mode development"
   },
   "author": "",

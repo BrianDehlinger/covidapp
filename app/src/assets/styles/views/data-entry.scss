@@ -10,6 +10,17 @@
   color: #32cd32;
 }
 
+.policy-link {
+  position: absolute;
+  bottom: 0;
+  
+  a {
+    color: #036;
+    font-size: smaller;
+  }
+}
+
+
 .data-entry-content {
   min-height: 85vh;
   padding: 6.5vh 0;
