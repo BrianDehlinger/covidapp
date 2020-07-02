@@ -11,12 +11,9 @@ import ScrollService from '../services/scroll-service.js';
 import DBUtil, { FEVER_ENTRIES, QUEUED_ENTRIES } from '../util/db-util.js';
 import DataEntryService from '../services/data-entry-service.js';
 import Translator from '../util/translator.js';
-import FeverDataUtil from '../util/fever-data-util.js';
 import '../components/gender-input.js';
-// import GoogleAnalyticsService from '../services/google-analytics-service.js';
 import Dialog from '../components/dialog.js';
 import PWAService from '../services/pwa-service.js';
-// import NotificationService from '../services/notification-service.js';
 import { syncClientInformation } from '../services/service-worker-service.js';
 import BirthYearRangeSelector from '../components/birth-year-range-selector.js';
 import feelings from '../util/feelings.js';
@@ -31,9 +28,6 @@ class DataEntry extends LitElement {
 
       feeling: { type: Number }, // Adding variable for feeling
 
-      hasFever: { type: Boolean },
-      feverAmount: { type: Number },
-      feverAmountNowKnown: { type: Boolean },
       gender: { type: String },
       birthYear: { type: String },
 
@@ -68,9 +62,6 @@ class DataEntry extends LitElement {
 
     this.errorMessage = null;
     this.feeling = null; // setting initial value
-    this.hasFever = null;
-    this.feverAmount = 35;
-    this.feverAmountNotKnown = false;
     this.birthYear = birthYear || null;
     this.gender = gender || null;
     this.location = latestEntry ? latestEntry.location : null;
@@ -92,7 +83,6 @@ class DataEntry extends LitElement {
   }
 
   firstUpdated() {
-    this.initSlider();
     //this.getGeoLocationInfo();
     Array.from(this.querySelectorAll('.mdc-checkbox')).forEach(elem => {
       // eslint-disable-next-line no-new
@@ -188,98 +178,6 @@ class DataEntry extends LitElement {
     }
   }
 
-  handleFeverButton(hasFever) {
-    this.hasFever = hasFever;
-    if (this.hasFever) {
-      setTimeout(() => {
-        const slider = this.initSlider();
-
-        const checkboxElem = this.querySelector('.mdc-checkbox');
-        const checkbox = new MDCCheckbox(checkboxElem);
-        checkboxElem.addEventListener('change', () => {
-          this.feverAmountNotKnown = checkbox.checked;
-          this.feverAmount = checkbox.checked ? 0 : slider.value.toFixed(1);
-          slider.getDefaultFoundation().setDisabled(checkbox.checked);
-        });
-      });
-    }
-  }
-
-  initSlider() {
-    const tempMeter = this.querySelector('#temperature-meter');
-    if (!tempMeter) {
-      return;
-    }
-    const celcius = this.querySelector('.celcius');
-    const fahrenheit = this.querySelector('.fahrenheit');
-    // This is extremely hacky but it works rn so
-    tempMeter.addEventListener('input', e => {
-      this.feverAmount = e.target.value;
-      celcius.value = this.feverAmount;
-      fahrenheit.value = FeverDataUtil.celsiusToFahrenheit(this.feverAmount);
-    });
-    celcius.addEventListener('keyup', e => {
-      if (e.key === 'Tab') {
-        return;
-      }
-      this.handleCommaInput(e);
-      this.feverAmount = e.target.value;
-      fahrenheit.value = FeverDataUtil.celsiusToFahrenheit(e.target.value);
-      tempMeter.value = this.feverAmount;
-    });
-    fahrenheit.addEventListener('keyup', e => {
-      if (e.key === 'Tab') {
-        return;
-      }
-      this.handleCommaInput(e);
-      this.feverAmount = FeverDataUtil.fahrenheitToCelsius(e.target.value);
-      celcius.value = this.feverAmount;
-      tempMeter.value = this.feverAmount;
-    });
-
-    celcius.addEventListener('focus', e => {
-      e.target.value = '';
-    });
-
-    celcius.addEventListener('blur', e => {
-      const val = e.target.value;
-      if (val.length < 1) {
-        e.target.value = this.feverAmount;
-      }
-    });
-
-    fahrenheit.addEventListener('blur', e => {
-      const val = e.target.value;
-      if (val.length < 1) {
-        e.target.value = FeverDataUtil.celsiusToFahrenheit(this.feverAmount);
-      }
-    });
-
-    fahrenheit.addEventListener('focus', e => {
-      e.target.value = '';
-    });
-    // Programmatically set height of the temp meter
-    setTimeout(() => {
-      tempMeter.style.width = `${tempMeter.parentNode.clientHeight}px`;
-    }, 0);
-  }
-
-  // Quite hacky but should work
-  // eslint-disable-next-line class-methods-use-this
-  handleCommaInput(e) {
-    if (e.key === ',') {
-      e.target.setAttribute('comma-was-input', true);
-      e.target.value += '.0';
-    } else if (e.target.getAttribute('comma-was-input')) {
-      e.target.removeAttribute('comma-was-input');
-      if (!Number.isNaN(e.key)) {
-        // is number
-        const oldVal = e.target.value;
-        e.target.value = `${oldVal.split('.')[0]}.${e.key}`;
-      }
-    }
-  }
-
   async buildFeverData() {
     const feverData = {};
     const geoCodingInfo = await this.getGeoCodingInputInfo();
@@ -291,11 +189,6 @@ class DataEntry extends LitElement {
 
     feverData.timestamp = Math.floor(subDate.getTime() / 1000); //This is EpochTime in seconds in UTC
     feverData.feeling = this.feeling.toString(); // submitting feeling input
-    feverData.fever_status = this.hasFever;
-    feverData.fever_temp = this.feverAmount;
-    if (this.hasFever) {
-      feverData.fever_temp = !this.feverAmountNotKnown && this.hasFever ? this.feverAmount : null;
-    }
     feverData.birth_year = this.birthYear;
     feverData.gender = this.gender;
 
@@ -376,15 +269,6 @@ class DataEntry extends LitElement {
   validateFeeling(feeling) {
     if (!feeling || isNaN(feeling) || feeling < 1 || feeling > 3) {
       this.errorMessage = Translator.get('system_messages.error.feeling_value_not_valid');
-      SnackBar.error(this.errorMessage);
-      return false;
-    }
-    return true;
-  }
-
-  validateFeverTemp(feverTemp) {
-    if (feverTemp != null && (feverTemp < 35 || feverTemp > 44)) {
-      this.errorMessage = Translator.get('system_messages.error.fever_temp_value_invalid');
       SnackBar.error(this.errorMessage);
       return false;
     }
