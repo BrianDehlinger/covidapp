@@ -1,0 +1,39 @@
+@import "../palette";
+
+.worklight-landing-content {
+  margin: 1rem 20% 10%;
+  height: 100%;
+}
+
+.participant-count-subtitle {
+  margin: 2rem 0 0 0;
+  color: #ff9800;
+}
+
+.responsive {
+  width: 100%;
+  height: auto;
+}
+
+.install-button {
+  position: absolute;
+  top: 2.5rem;
+  right: 1rem;
+
+  .mdc-button {
+    height: 30px;
+    font-size: 0.6rem;
+    background-color: $bluegreen !important;
+
+    &--unelevated {
+      padding: 0 8px;
+    }
+  }
+}
+
+@media only screen and (max-width: 780px) {
+  .worklight-landing-content {
+    margin: 1rem 5% 11vh;
+    padding-top: 3rem;
+  }
+}

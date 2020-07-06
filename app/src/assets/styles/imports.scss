@@ -3,9 +3,13 @@
 @use "views/state-view-content";
 @use "views/data-entry";
 @use "views/data-view";
+@use "views/worklight-landing-view";
+@use "views/worklight-data-entry";
+@use "views/worklight-data-view";
 
 // Components
 @use "components/covidapp-navigation";
+@use "components/worklight-navigation";
 @use "components/material-icon";
 @use "components/input-field";
 @use "components/select-field";
@@ -18,4 +22,4 @@
 // External
 @use "material-components-web/material-components-web";
 
-@import "~leaflet/dist/leaflet.css";
+//@import "~leaflet/dist/leaflet.css";

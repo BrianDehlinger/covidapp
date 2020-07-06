@@ -1,4 +1,4 @@
-import './app/covidapp-root.js';
+import './app/worklight-root.js';
 import './assets/styles/base.scss';
 import { ServiceWorkerServiceInit } from './app/services/service-worker-service.js';
 import PWAService from './app/services/pwa-service.js';
