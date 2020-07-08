@@ -3,30 +3,26 @@
   "language": "语言",
   "fevermap_title": "COVIDstoplight",
   "back": "后退",
-  "today": "Today",
+  "today": "今天",
   "user_description": "You are a %{age} -year-old %{gender}, with %{diagnosis}",
   "a_covid_diagnosis": "a COVID-19 diagnosis",
   "no_covid_diagnosis": "no COVID-19 diagnosis",
 
   "landing": {
     "about": "关于",
-    "about_title": "什么是COVIDstoplight?",
-    "about_content_explanation": "一个Web和移动应用程序，用于简单，实时地收集冠状病毒COVID-19大流行的流行程度。",
-    "about_current_methods": "当前跟踪冠状病毒流行情况的方法无法获得完整的图像。 大批群众仍未经过测试，以确保有时间和资源可供需要的人使用。",
-    "about_solution": "COVIDstoplight应运而生。 借助COVIDstoplight，世界各地的普通人都可以匿名报告自己的发烧和其他症状。 这意味着我们可以实时估计COVID-19感染的真实发生率，并向当局提供数据，帮助他们制定基于数据的，正确的和及时的保护措施决策。",
-    "about_data_collection": "COVIDstoplight收集的数据将被匿名化，并将用于帮助提高人们对当前全球形势的认识。",
-    "about_current_participant_count": "到目前为止， %{participantCount}名用户已使用COVIDstoplight报告其症状。 ",
-
+    "about_title": "欢迎来到COVIDstoplight",
+    "about_content_explanation": "如果您拥有智能手机或计算机，则可以帮助您挽救社区生命。",
+    "about_data_collection": "每天至少一次回答一个或两个问题，以表明您当时的感觉和状态，从而有所作为。这种简单的信息共享将有助于理解和控制COVID-19。",
+    "about_current_participant_count": "迄今为止，伊利诺伊州有 ％{participantCount}人已使用COVIDstoplight报告其症状。",
     "how_to_participate": "如何参与",
-    "participation_info": "这很简单。 您只需测量温度，然后将结果以及一些统计信息（例如您的出生年份和区号）输入即可。",
+    "participation_info":"简单。只需单击标记为“健康报告”下方的按钮。",
     "info_disclaimer": "我们不会询问可能导致您被认出的问题。 我们重视您的隐私和匿名性。",
 
     "how_will_my_data_be_used": "我的数据将如何被使用？",
-    "data_use_explanation": "数据将被匿名化，然后将通过API接口作为开放数据共享。"
+    "data_use_explanation":"来自每个使用COVIDstoplight的人的数据将被合并，汇总的结果将用于告知疾病传播模型。汇总结果将提供给Pandemic Response Commons的成员。" 
   },
   "entry": {
-    "data_entry": "数据记录",
-    "first_entry_disclaimer": "记录将根据您的设备提交到数据库中。 我们希望您每次都从同一设备提交信息。 这将使我们能够更好地监控您的发烧状况。",
+    "data_entry": "健康报告",
     "last_submission": "上次提交",
     "submission_period_disclaimer": "为了防止不必要的数据，每12小时只能提交一次。",
     "sync_now": "现在同步",
@@ -36,17 +32,21 @@
     "queued_entries": "You have queued entries",
     "send_now": "Send now",
     "questions": {
-      "what_is_your_temperature": "您的体温是多少",
-      "temperature": "体温",
-      "how_much": "多少",
-      "degrees_of_fever": "%{degrees}度",
-      "not_measured": "不清楚，没量过",
-      "set_temperature": "设置体温",
+      "how_are_feeling": "有所作为一样容易。",
+      "how_are_feeling_bullets": "如果您现在感觉健康或身体不适，请在下面注明。如果感觉不适，请指出您遇到的症状。",
+      "feeling_very_good": "健康",
+      "feeling_not_so_good": "生病",
+      "feeling_sick": "病得很重",
       "other_symptoms": "其他症状？",
       "choose_all_that_apply": "选择所有适用的",
-      "difficulty_breathing": "呼吸困难",
       "cough": "咳嗽",
+      "difficulty_breathing": "呼吸困难",
+      "fever": "发热",
+      "headache": "头痛",
+      "chills": "寒意",
       "sore_throat": "咽喉痛",
+      "shaking": "恶心或腹泻",
+      "loss_of_taste": "失去味道或气味",
       "muscular_pain": "肌肉疼痛",
       "positive_covid_diagnosis": "COVID-19检测阳性",
       "set_symptoms": "设置症状",
@@ -60,34 +60,36 @@
       "city": "城市",
       "country": "国家",
       "postal_code": "邮政编码",
-      "location_determination_subtitle": "使用定位。 确保允许使用定位服务。",
       "location_change_subtitle": "要更新位置信息，请更新国家和邮政编码或者按下面的按钮。",
       "update_location": "更新位置",
       "use_gps": "用GPS获取位置",
-      "set_location_and_submit": "设置位置并提交"
+      "set_location_and_submit": "提交"
     },
     "previous_submissions": "以前的提交",
     "submit": "提交",
     "save": "保存",
-
+    "skip": "跳跃",
     "last_submission_was_done": "您上一次提交是在%{date}",
-    "submission_count_text": "您已输入发烧信息",
-    "submission_count_times": "次数",
     "currently_holding_a_streak_of": "您当前的连续打卡数是：",
     "streak_days": "天数"
   },
 
   "history": {
-    "title": "History",
-    "your_streak": "Your streak",
-    "days": "Days",
-    "total_entries": "Total entries",
-    "measurements": "measurement",
-    "add_entry": "Add entry"
+    "title": "历史",
+    "your_streak": "你的连胜",
+    "days": "天",
+    "total_entries": "总条目",
+    "measurements": "报告",
+    "achievement_title": "您的成就",
+    "no_achievements_message": "您可以获得连续报告的徽章。",
+    "add_entry": "新报告"
   },
 
   "stats": {
-    "stats": "统计资料"
+    "stats": "统计资料",
+    "number_reporting": "报告人数",
+    "number_reports":"健康报告数量",
+    "decription": "较暗的地区有更多关于人们感到不适的报道"
   },
 
   "system_messages": {
@@ -118,11 +120,11 @@
       "approve_text": "安装",
       "decline_text": "以后"
     },
-    "notifications": {
-      "title": "Allow notifications",
-      "content": "COVIDstoplight would like to offer you a daily notification reminding you to log your daily health status. Allow notifications?",
-      "approve_text": "Allow notifications",
-      "decline_text": "No please"
+    "location": {
+      "title": "允许位置访问",
+      "content": "我们可以使用您设备中的位置信息，还是希望在每个报告中输入位置信息？",
+      "approve_text": "允许位置访问",
+      "decline_text": "我会输入"
     }
   },
   "notification": {
