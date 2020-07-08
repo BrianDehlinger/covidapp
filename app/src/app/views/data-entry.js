@@ -184,6 +184,7 @@ class DataEntry extends LitElement {
 
     // device ID is handled during submission
     let subDate = new Date();
+    // Time set to nearest hour
     subDate.setHours(subDate.getHours() + Math.round(subDate.getMinutes() / 60));
     subDate.setMinutes(0, 0, 0);
 
@@ -234,10 +235,10 @@ class DataEntry extends LitElement {
       return false;
     }
 
-    const feverTempIsValid = this.validateFeverTemp(feverData.fever_temp);
-    if (!feverTempIsValid) {
-      return false;
-    }
+    //const feverTempIsValid = this.validateFeverTemp(feverData.fever_temp);
+    //if (!feverTempIsValid) {
+      //return false;
+    //}
 
     //Lat Long Validation
     // const locationIsValid = this.validateLocation(feverData);
