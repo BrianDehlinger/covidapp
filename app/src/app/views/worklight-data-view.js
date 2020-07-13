@@ -3,16 +3,17 @@ import { LitElement, html } from 'lit-element';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import Translator from '../util/translator.js';
-import DBUtil, { FEVER_ENTRIES, QUEUED_ENTRIES } from '../util/db-util.js';
-import GeolocatorService from '../services/geolocator-service.js';
+import DBUtil, { DATA_ENTRIES, QUEUED_ENTRIES } from '../util/db-util.js';
+//import GeolocatorService from '../services/geolocator-service.js';
+//import FeverDataUtil from '../util/fever-data-util.js';
+// import GoogleAnalyticsService from '../services/google-analytics-service.js';
 import ScrollService from '../services/scroll-service.js';
-import DataEntryService from '../services/data-entry-service.js';
+import DataEntryService from '../services/worklight-data-entry-service.js';
 import SnackBar from '../components/snackbar.js';
+// import NotificationService from '../services/notification-service.js';
 import BirthYearRangeSelector from '../components/birth-year-range-selector.js';
 import feelings from '../util/feelings.js';
 import '../components/feeling-chart.js';
-
-import testPic from "../../assets/images/yourpic.png";
 
 import firstBadge from "../../assets/images/badge-1.svg";
 import secondBadge from "../../assets/images/badge-2.svg";
@@ -26,7 +27,7 @@ class WorklightDataView extends LitElement {
       submissionCount: { type: Number },
       submissionStreak: { type: Number },
       previousSubmissions: { type: Array },
-      //geoCodingInfo: { type: Object },
+      geoCodingInfo: { type: Object },
       firstTimeSubmitting: { type: Boolean },
       lastSubmissionIsTooCloseToNow: { type: Boolean },
       nextAllowedSubmitTime: { type: String },
@@ -91,20 +92,28 @@ class WorklightDataView extends LitElement {
 
     this.checkLastSubmissionTime();
 
-    const gender = localStorage.getItem('GENDER');
-    let birthYear = localStorage.getItem('BIRTH_YEAR');
     const covidDiagnosis = localStorage.getItem('COVID_DIAGNOSIS');
-    this.setGender = gender || null;
-    this.setBirthYear = birthYear || '';
     this.setCovidDiagnosis = covidDiagnosis === 'true';
     this.previousSubmissions = null;
     this.showEditFields = false;
 
-    // this.firstTimeSubmitting = this.setGender == null || this.setBirthYear == null;
     this.firstTimeSubmitting = localStorage.getItem('LATEST_ENTRY') ? false : true;
 
     this.getPreviousSubmissionsFromIndexedDb();
     this.hasSubscribedToTopic = localStorage.getItem('NOTIFICATION_TOPIC');
+  }
+
+  /**
+   * Since we've changed from exact year to year range, some users have the old format.
+   * This wil re-format the user's age to match the new system.
+   * @param birthYear
+   */
+  handleOldBirthYear(birthYear) {
+    if (birthYear % 10 !== 0) {
+      this.handleAgeChange(Math.floor(birthYear / 10) * 10);
+      return this.setBirthYear;
+    }
+    return birthYear;
   }
 
   firstUpdated() {
@@ -112,9 +121,8 @@ class WorklightDataView extends LitElement {
     document.addEventListener('update-submission-list', () => {
       this.getPreviousSubmissionsFromIndexedDb();
 
-      this.setGender = localStorage.getItem('GENDER');
-      this.setBirthYear = localStorage.getItem('BIRTH_YEAR');
-      this.setCovidDiagnosis = localStorage.getItem('COVID_DIAGNOSIS') === 'true';
+      //this.setCovidDiagnosis = localStorage.getItem('COVID_DIAGNOSIS') === 'true';
+      this.setCovidDiagnosis = 'false';
 
       this.checkLastSubmissionTime();
     });
@@ -142,7 +150,6 @@ class WorklightDataView extends LitElement {
       this.getSubmissionStats();
     });
 
-    birthYear = this.handleOldBirthYear(birthYear);
     // Update the feed on focus to get the latest info after background submit etc
     window.addEventListener('focus', () => {
       this.getSubmissionStats();
@@ -171,7 +178,7 @@ class WorklightDataView extends LitElement {
 
   async getSubmissionStats() {
     const db = await DBUtil.getInstance();
-    const submissionHistory = await db.getAll(FEVER_ENTRIES);
+    const submissionHistory = await db.getAll(DATA_ENTRIES);
     const submissionCount = submissionHistory.length;
     const submissionStreak = DataEntryService.determineStreak(submissionHistory);
 
@@ -260,7 +267,7 @@ class WorklightDataView extends LitElement {
   async getPreviousSubmissionsFromIndexedDb() {
     await this.setDayJsLanguage();
     const db = await DBUtil.getInstance();
-    const previousSubmissions = await db.getAll(FEVER_ENTRIES);
+    const previousSubmissions = await db.getAll(DATA_ENTRIES);
     if (previousSubmissions && previousSubmissions.length > 0) {
       this.previousSubmissions = previousSubmissions.sort(
         (a, b) => new Date(b.timestamp) - new Date(a.timestamp),
@@ -335,37 +342,11 @@ class WorklightDataView extends LitElement {
     return symptoms.filter(symp => symp.hasSymptom);
   }
 
-  handleGenderChange(newGender) {
-    this.setGender = newGender;
-    // localStorage.setItem('GENDER', newGender);
-  }
-
-  getAge() {
-    const age = dayjs(new Date()).year() - this.setBirthYear;
-    return `${age - 10}-${age}`;
-  }
-
-  handleAgeChange(newAge) {
-    if (newAge < 1900 || newAge > 2020) {
-      return;
-    }
-    this.setBirthYear = newAge;
-    // localStorage.setItem('BIRTH_YEAR', newAge);
-  }
-
   handleCovidDiagnosisChange() {
     this.setCovidDiagnosis = this.querySelector('#covid-diagnosed').checked;
-    // localStorage.setItem('COVID_DIAGNOSIS', this.setCovidDiagnosis);
-  }
-
-  handleSaveDemographics() {
-    localStorage.setItem('GENDER', this.setGender);
-    localStorage.setItem('BIRTH_YEAR', this.setBirthYear);
     localStorage.setItem('COVID_DIAGNOSIS', this.setCovidDiagnosis);
-
-    this.showEditFields = false;
-    ScrollService.scrollToTop();
   }
+
 
   // handleSocialShare() {
   //   FB.ui({
@@ -427,7 +408,7 @@ class WorklightDataView extends LitElement {
       <div class="container worklight-view-wrapper worklight-entry-view">
         <div class="worklight-data-view-content">
           <div class="entry-history-title-area">
-            <h2 class="center">Hall Pass</h2>
+            <h2>${Translator.get('history.title')}</h2>
             <material-button
               @button-clicked="${this.lastSubmissionIsTooCloseToNow
         ? this.showSubmissionTooCloseSnackbar
@@ -440,10 +421,86 @@ class WorklightDataView extends LitElement {
             ></material-button>
           </div>
           <div class="entry-info-worklight-view-wrapper">
-            <div class="statistics-fields">
-              <img src="${testPic}" class="center"/>
+            <div class="progression-chart">
+              <feeling-chart
+                .data="${this.previousSubmissions}"
+                chartId="fever-history-chart"
+              ></feeling-chart>
             </div>
-              <h1>I attest that I am Healthy</h1>
+            <div class="statistics-fields">
+              <div class="statistics-field statistics-field--streak-statistics">
+                <p class="statistics-field--title">${Translator.get('history.your_streak')}</p>
+                <p class="statistics-field--result">${this.submissionStreak}</p>
+                <p class="statistics-field--subtitle">${Translator.get('history.days')}</p>
+              </div>
+              <div class="statistics-fields--splitter"></div>
+              <div class="statistics-field statistics-field--total-statistics">
+                <p class="statistics-field--title">${Translator.get('history.total_entries')}</p>
+                <p class="statistics-field--result">${this.submissionCount}</p>
+                <p class="statistics-field--subtitle">${Translator.get('history.measurements')}</p>
+              </div>
+            </div>
+            ${this.createPersistentDataFields()}
+              <div class="badges-parent-container">
+                  <p><b>${Translator.get('history.achievement_title')}</b></p>
+                  <div class="badges-container">
+                    <div class="badges-current">
+                      ${this.badges.length == 0 ?
+        html`
+                          <div>${Translator.get('history.no_achievements_message')}</div>
+                        ` :
+        html`
+                          <div class="statistics-field--result">
+                            ${this.badges.map(b => {
+          const currentBadge = this.badgeForStreak.find(s => s.streak == b.streak);
+          return html`
+                                <img class="badge ${b.date == this.newBadge ? ' badge--animate' : ''}" title='${currentBadge.msg}' alt='${currentBadge.msg}' src='${currentBadge.icon}' />
+                            `
+        })}
+                          </div>
+                        `}
+                    </div>
+                    <div class="badges-next">
+                      ${this.nextBadge ?
+        html`
+                        <p>Maintain ${this.nextBadge.msg}</p>
+                        <div role="progressbar" class="mdc-linear-progress badges-progress">
+                          <div class="mdc-linear-progress__buffering-dots"></div>
+                          <div class="mdc-linear-progress__buffer"></div>
+                          <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar" style="transform: scaleX(${((this.submissionStreak - this.nextBadge.prevStreak) / (this.nextBadge.streak - this.nextBadge.prevStreak))});">
+                            <span class="mdc-linear-progress__bar-inner"></span>
+                          </div>
+                          <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+                            <span class="mdc-linear-progress__bar-inner"></span>
+                          </div>
+                        </div>
+                        <p>
+                          Next Award
+                        </p>
+                      `
+        :
+        html`
+                        <p>We are working hard to bring you something special. Keep reporting.</p>
+                      `}
+                    </div>
+                  </div>
+               </div>
+              <div class="queued-entries-container">
+                <p><b>${Translator.get('entry.previous_submissions')}</b></p>
+                <div>
+            ${this.queuedEntries && this.queuedEntries.length > 0
+        ? html`
+                  <div class="queued-entries">
+                    <p>${Translator.get('entry.queued_entries')}</p>
+                    <material-button
+                      label="${Translator.get('entry.send_now')}"
+                      icon="sync"
+                      @click="${() => this.syncQueuedEntries()}"
+                    ></material-button>
+                  </div>
+                `
+        : ''}
+              </div>
             </div>
             <div class="previous-submissions-list">
               ${this.previousSubmissions &&
@@ -512,11 +569,6 @@ class WorklightDataView extends LitElement {
   //   `;
   // }
 
-  getGenderTranslated() {
-    return this.setGender === 'M'
-      ? Translator.get('entry.questions.male').toLowerCase()
-      : Translator.get('entry.questions.female').toLowerCase();
-  }
 
   getCovidStatusTranslated() {
     return this.setCovidDiagnosis

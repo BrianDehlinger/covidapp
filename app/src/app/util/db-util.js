@@ -1,12 +1,12 @@
-const dbName = 'STOPLIGHTDB';
-const versionNum = 3;
+const dbName = 'WORKLIGHTDB';
+const versionNum = 1;
 
-export const FEVER_ENTRIES = 'feverEntries';
+export const DATA_ENTRIES = 'dataEntries';
 export const QUEUED_ENTRIES = 'queuedEntries';
 
 const objectStores = [
   {
-    name: FEVER_ENTRIES,
+    name: DATA_ENTRIES,
     options: { keyPath: 'timestamp', autoIncrement: false },
   },
   {
@@ -46,8 +46,8 @@ export default class DBUtil {
   _handleUpgradeNeed(e, resolve) {
     this.db = e.target.result;
     if (versionNum === 3) {
-      if (this.db.objectStoreNames.contains(FEVER_ENTRIES)) {
-        this.db.deleteObjectStore(FEVER_ENTRIES);
+      if (this.db.objectStoreNames.contains(DATA_ENTRIES)) {
+        this.db.deleteObjectStore(DATA_ENTRIES);
       }
       if (this.db.objectStoreNames.contains(QUEUED_ENTRIES)) {
         this.db.deleteObjectStore(QUEUED_ENTRIES);

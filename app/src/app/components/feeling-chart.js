@@ -4,7 +4,7 @@ import Chart from 'chart.js';
 import dayjs from 'dayjs';
 import dayOfYear from 'dayjs/plugin/dayOfYear';
 import Translator from '../util/translator.js';
-import FeverDataUtil from '../util/fever-data-util.js';
+//import FeverDataUtil from '../util/fever-data-util.js';
 import feelings from '../util/feelings.js';
 import getSymptomsForSubmission from "../util/symptoms.js";
 

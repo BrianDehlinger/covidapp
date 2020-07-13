@@ -50,14 +50,10 @@ export default class ServiceWorkerService {
     ServiceWorkerService.sendMessage({
       type: 'SET_CLIENT_INFORMATION',
       clientId,
-      birthYear: localStorage.getItem('BIRTH_YEAR'),
-      gender: localStorage.getItem('GENDER'),
       covidDiagnosis: localStorage.getItem('COVID_DIAGNOSIS'),
       locationData: {
-        location_country_code: lastLocation.countryShort,
-        location_postal_code: lastLocation.postal_code,
-        location_lng: lastLocation.coords.lng,
-        location_lat: lastLocation.coords.lat,
+        location_address: lastLocation.address,
+        location_floor: lastLocation.floor,
       },
     });
     ServiceWorkerService.sendMessage({

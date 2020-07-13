@@ -28,7 +28,7 @@ const getSymptomsForSubmission = (sub) => {
         },
         {
             translation: Translator.get('entry.questions.shaking'),
-            hasSymptom: sub.symptom_shaking,
+            hasSymptom: sub.symptom_nausea,
         },
         {
             translation: Translator.get('entry.questions.loss_of_taste'),

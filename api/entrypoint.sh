@@ -5,7 +5,7 @@ set -e
 set -m
 
 # https://flask.palletsprojects.com/en/1.1.x/cli/
-export FLASK_APP="covidapp"
+export FLASK_APP="worklight"
 
 # Default to development if nothing is set
 if [ -z "$FLASK_ENV" ]
@@ -28,7 +28,7 @@ fi
 
 uwsgi \
     --plugins=python37 \
-    --module=covidapp.wsgi:application \
+    --module=worklight.wsgi:application \
     --master \
     --processes=5 \
     --threads=2 \

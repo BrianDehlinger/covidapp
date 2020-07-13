@@ -42,13 +42,13 @@ services:
 
   # Database container is for development only, thus default credentials are ok
   # Access MariaDB console with:
-  #   docker exec -it covidapp_database_1 mysql -prootpass covidapp
+  #   docker exec -it covidapp_database_1 mysql -prootpass worklight
   database:
     image: "mariadb:latest"
     environment:
       - MYSQL_ROOT_PASSWORD=rootpass
-      - MYSQL_DATABASE=covidapp
-      - MYSQL_USER=stoplight
+      - MYSQL_DATABASE=worklight
+      - MYSQL_USER=worklight
       - MYSQL_PASSWORD=temppass
     volumes:
       - "database:/var/lib/mysql:rw"

@@ -4,21 +4,24 @@ import { LitElement, html } from 'lit-element';
 import { MDCCheckbox } from '@material/checkbox/component';
 import { MDCSelect } from '@material/select/component';
 import tabtrap from 'tabtrap';
-import GeolocatorService from '../services/geolocator-service.js';
+//import GeolocatorService from '../services/worklight-geolocator-service.js';
 import '../components/input-field.js';
 import '../components/select-field.js';
 import SnackBar from '../components/snackbar.js';
 import ScrollService from '../services/scroll-service.js';
-import DBUtil, { FEVER_ENTRIES, QUEUED_ENTRIES } from '../util/db-util.js';
+import DBUtil, { DATA_ENTRIES, QUEUED_ENTRIES } from '../util/db-util.js';
 import DataEntryService from '../services/worklight-data-entry-service.js';
 import Translator from '../util/translator.js';
-//import '../components/gender-input.js';
+import { initAutocomplete, autocomplete } from '../services/autocomplete-service.js';
+//import initAutocomplete from '../services/autocomplete-service.js';
 import Dialog from '../components/dialog.js';
 import PWAService from '../services/pwa-service.js';
 import { syncClientInformation } from '../services/service-worker-service.js';
-import BirthYearRangeSelector from '../components/birth-year-range-selector.js';
+//import BirthYearRangeSelector from '../components/birth-year-range-selector.js';
 import feelings from '../util/feelings.js';
 import dayjs from 'dayjs';
+
+const apiKey = 'AIzaSyDuQel_c1dGUx83gQ5p2dCdLgO6BePDKMY';
 
 class WorklightDataEntry extends LitElement {
   static get properties() {
@@ -29,15 +32,8 @@ class WorklightDataEntry extends LitElement {
 
       feeling: { type: Number }, // Adding variable for feeling
 
-      gender: { type: String },
-      birthYear: { type: String },
-
-      geoCodingInfo: { type: Object },
-      countrySelectionOptions: { type: Array },
-      selectedCountryIndex: { type: Number },
-
-      buildingSelectionOptions: { type: Array },
-      selectedBuildingIndex: { type: Number },
+      location_address: { type: String },
+      location_floor:   {type: Number },
 
       errorMessage: { type: String },
 
@@ -46,10 +42,10 @@ class WorklightDataEntry extends LitElement {
       questionCount: { type: Number },
 
       symptoms: { type: Array },
+      activities: { type: Array },
       covidDiagnosed: { type: Boolean },
       transitioning: { type: Boolean },
 
-      showDemographicsScreen: { type: Boolean },
       showLocationScreen: { type: Boolean }
     };
   }
@@ -58,36 +54,31 @@ class WorklightDataEntry extends LitElement {
     super();
     const latestEntry = JSON.parse(localStorage.getItem('LATEST_ENTRY'));
     const lastLocation = localStorage.getItem('LAST_LOCATION');
-    const gender = localStorage.getItem('GENDER');
-    const birthYear = localStorage.getItem('BIRTH_YEAR');
     const covidDiagnosed = localStorage.getItem('COVID_DIAGNOSIS');
-    const demographicsSkipped = localStorage.getItem('DEMOGRAPHICS_SKIPPED');
     const locationPermission = localStorage.getItem('LOCATION_PERMISSION');
 
     this.errorMessage = null;
     this.feeling = null; // setting initial value
-    this.birthYear = birthYear || null;
-    this.gender = gender || null;
-    this.location = latestEntry ? latestEntry.location : null;
+    //this.location_address = latestLocation.location_address ? latestLocation.location_address : null;
+    //this.location_floor = latestLocation.location_floor ? latestLocation.location_floor : null;
+    this.location_address = null;
+    this.location_floor = null;
     this.locationPermission = locationPermission || null;
     this.latestEntry = latestEntry || null;
-    this.geoCodingInfo = latestEntry ? JSON.parse(lastLocation) : null;
     this.covidDiagnosed = covidDiagnosed === 'true';
 
-    this.firstTimeSubmitting = (demographicsSkipped == null) && (this.gender == null || this.birthYear == null);
+    this.firstTimeSubmitting = (this.latestEntry == null);
 
-
-    this.createCountrySelectOptions();
     this.queuedEntries = [];
 
     this.currentQuestion = 1;
     this.questionCount = 4;
     this.symptoms = [];
+    this.activities = [];
     this.transitioning = false;
   }
 
   firstUpdated() {
-    //this.getGeoLocationInfo();
     Array.from(this.querySelectorAll('.mdc-checkbox')).forEach(elem => {
       // eslint-disable-next-line no-new
       new MDCCheckbox(elem);
@@ -105,67 +96,36 @@ class WorklightDataEntry extends LitElement {
     // }
   }
 
-  // Setting country to united states.
-  // Hard coding the object here to keep code change to minimum
-  createCountrySelectOptions() {
-    // this.countrySelectionOptions = GeolocatorService.getCountryList().map(entry => ({
-    //   id: entry.country.country_id,
-    //   name: `${entry.country.country_name.substring(0, 1)}${entry.country.country_name
-    //     .substring(1)
-    //     .toLowerCase()} (${entry.country.country_id})`,
-    // }));
-    this.countrySelectionOptions = [{
-      id: "US",
-      name: "UNITED STATES"
-    }];
-    this.selectedCountryIndex = 0;
-    this.buildingSelectionOptions = [
-      {
-        id: "willis",
-        name: "Willis Tower"
-      },
-      {
-        id: "tribune",
-        name: "Tribune Tower"
-      },
-      {
-        id: "rookery",
-        name: "Rookery Building",
-      },
-      {
-        id: "aon",
-        name: "Aon Center"
-      }
-    ];
+//  async createLocationDialog() {
+//    if (!this.locationPermission) {
+//      Dialog.open({
+//        title: Translator.get('dialog.location.title'),
+//        content: Translator.get('dialog.location.content'),
+//        approveText: Translator.get('dialog.location.approve_text'),
+//        declineText: Translator.get('dialog.location.decline_text'),
+//        approveEvent: 'location-dialog-approve',
+//        declineEvent: 'location-dialog-decline',
+//      });
+//
+//      document.addEventListener('location-dialog-approve', () => {
+//        localStorage.setItem("LOCATION_PERMISSION", "approved");
+//        this.nextQuestion(() => this.handleDialogFocus('#question-4'), 4);
+//      });
+//
+//      document.addEventListener('location-dialog-decline', () => {
+//        localStorage.setItem("LOCATION_PERMISSION", "denied");
+//      });
+//
+//    } else if (this.locationPermission != 'denied') {
+//      //this.getGeoLocationInfo();
+//    }
+//      //this.getGeoLocationInfo();
+//  }
+
+  async getGeoLocationInfo(forceUpdate) {
+    //this.geoCodingInfo = await GeolocatorService.geolocate();
+    geolocate();
   }
-
-  async createLocationDialog() {
-    if (!this.locationPermission) {
-      Dialog.open({
-        title: Translator.get('dialog.location.title'),
-        content: Translator.get('dialog.location.content'),
-        approveText: Translator.get('dialog.location.approve_text'),
-        declineText: Translator.get('dialog.location.decline_text'),
-        approveEvent: 'location-dialog-approve',
-        declineEvent: 'location-dialog-decline',
-      });
-
-      document.addEventListener('location-dialog-approve', () => {
-        localStorage.setItem("LOCATION_PERMISSION", "approved");
-        this.nextQuestion(() => this.handleDialogFocus('#question-4'), 4);
-        this.getGeoLocationInfo();
-      });
-
-      document.addEventListener('location-dialog-decline', () => {
-        localStorage.setItem("LOCATION_PERMISSION", "denied");
-      });
-
-    } else if (this.locationPermission != 'denied') {
-      this.getGeoLocationInfo();
-    }
-  }
-
-//  async getGeoLocationInfo(forceUpdate) {
 //    if (!this.geoCodingInfo || forceUpdate) {
 //      this.geoCodingInfo = null;
 //      navigator.geolocation.getCurrentPosition(async success => {
@@ -200,8 +160,8 @@ class WorklightDataEntry extends LitElement {
 //    }
 //  }
 
-  async buildFeverData() {
-    const feverData = {};
+  async buildDataEntry() {
+    const dataEntry = {};
     const geoCodingInfo = await this.getGeoCodingInputInfo();
 
     // device ID is handled during submission
@@ -209,16 +169,11 @@ class WorklightDataEntry extends LitElement {
     subDate.setHours(subDate.getHours() + Math.round(subDate.getMinutes() / 60));
     subDate.setMinutes(0, 0, 0);
 
-    feverData.timestamp = Math.floor(subDate.getTime() / 1000); //This is EpochTime in seconds in UTC
-    feverData.feeling = this.feeling.toString(); // submitting feeling input
-    feverData.birth_year = this.birthYear;
-    feverData.gender = this.gender;
+    dataEntry.timestamp = Math.floor(subDate.getTime() / 1000); //This is EpochTime in seconds in UTC
+    dataEntry.feeling = this.feeling.toString(); // submitting feeling input
 
-    feverData.location_country_code = geoCodingInfo.country_code;
-    feverData.location_postal_code = geoCodingInfo.postal_code;
-
-    feverData.location_lng = null; //geoCodingInfo.location_lng.toFixed(7);
-    feverData.location_lat = null; //geoCodingInfo.location_lat.toFixed(7);
+    dataEntry.location_address = geoCodingInfo.address;
+    dataEntry.location_floor = geoCodingInfo.floor;
 
     const possibleSymptoms = [
       'symptom_cough',
@@ -227,78 +182,62 @@ class WorklightDataEntry extends LitElement {
       'symptom_headache',
       'symptom_chills',
       'symptom_sore_throat',
-      'symptom_shaking',
+      'symptom_nausea',
       'symptom_loss_of_taste',
       'symptom_muscle_pain',
     ];
     possibleSymptoms.forEach(symp => {
-      feverData[symp] = this.symptoms.includes(symp);
+      dataEntry[symp] = this.symptoms.includes(symp);
     });
 
-    feverData.diagnosed_covid19 = this.covidDiagnosed;
+    dataEntry.diagnosed_covid19 = this.covidDiagnosed;
 
-    return feverData;
+    const possibleActivities = [
+      'visited_bar',
+      'visited_restaurant',
+      'visited_concert',
+      'visited_nightclub',
+      'visited_church',
+      'visited_gathering',
+    ];
+    possibleActivities.forEach(activity => {
+      dataEntry[activity] = this.activities.includes(activity);
+    });
+
+    return dataEntry;
   }
 
-  validateFeverData(feverData) {
+  validateDataEntry(dataEntry) {
     //Commenting this as demographics are optional now
-    // const ageIsValid = this.validateAge(feverData.birth_year);
+    // const ageIsValid = this.validateAge(dataEntry.birth_year);
     // if (!ageIsValid) {
     //   return false;
     // }
-    // const genderIsValid = this.validateGender(feverData.gender);
+    // const genderIsValid = this.validateGender(dataEntry.gender);
     // if (!genderIsValid) {
     //   return false;
     // }
 
-    const feelingIsValid = this.validateFeeling(feverData.feeling);
+    const feelingIsValid = this.validateFeeling(dataEntry.feeling);
     if (!feelingIsValid) {
       return false;
     }
 
-    const feverTempIsValid = this.validateFeverTemp(feverData.fever_temp);
-    if (!feverTempIsValid) {
-      return false;
-    }
-
-    //Lat Long Validation
-    // const locationIsValid = this.validateLocation(feverData);
-    // if (!locationIsValid) {
-    //   return false;
-    // }
-
-    return true;
-  }
-
-  validateAge(birthYear) {
-    if (birthYear > 2020 || birthYear < 1900) {
-      this.errorMessage = Translator.get('system_messages.error.age_not_in_range');
-      SnackBar.error(this.errorMessage);
-      return false;
-    }
-    return true;
-  }
-
-  validateGender(gender) {
-    if (gender === null) {
-      this.errorMessage = Translator.get('system_messages.error.gender_not_set');
-      SnackBar.error(this.errorMessage);
-      return false;
-    }
     return true;
   }
 
   validateFeeling(feeling) {
     if (!feeling || isNaN(feeling) || feeling < 1 || feeling > 3) {
       this.errorMessage = Translator.get('system_messages.error.feeling_value_not_valid');
+      console.log("cat");
       SnackBar.error(this.errorMessage);
       return false;
     }
     return true;
   }
 
-  validateLocation(feverData) {
- //   if (this.locationDataIsInvalid(feverData)) {
+  validateLocation(dataEntry) {
+ //   if (this.locationDataIsInvalid(dataEntry)) {
  //     this.errorMessage = Translator.get('system_messages.error.location_data_invalid');
  //     SnackBar.error(this.errorMessage);
  //     return false;
@@ -306,57 +245,65 @@ class WorklightDataEntry extends LitElement {
     return true;
   }
 
-  locationDataIsInvalid(feverData) {
+  locationDataIsInvalid(dataEntry) {
     return (
-      !feverData.location_country_code ||
-      !feverData.location_postal_code ||
-      !feverData.location_lng ||
-      !feverData.location_lat
+      !dataEntry.location_country_code ||
+      !dataEntry.location_postal_code ||
+      !dataEntry.location_lng ||
+      !dataEntry.location_lat
     );
   }
 
   async handleSubmit() {
-    const feverData = await this.buildFeverData();
-    const valid = this.validateFeverData(feverData);
+    console.log("Handling submit");
+    const dataEntry = await this.buildDataEntry();
+    const valid = this.validateDataEntry(dataEntry);
+    console.log(valid);
     if (!valid) {
       return;
     }
     this.errorMessage = null;
+    console.log("valid");
+    console.log(dataEntry);
 
-    const submissionResponse = await DataEntryService.handleDataEntrySubmission(feverData);
-    feverData["timestamp"] = dayjs.unix(feverData["timestamp"]).local().format();
+    const submissionResponse = await DataEntryService.handleDataEntrySubmission(dataEntry);
+    dataEntry["timestamp"] = dayjs.unix(dataEntry["timestamp"]).local().format();
 
+          console.log("goat");
+          console.log(submissionResponse);
     if (submissionResponse.success) {
-      this.handlePostSubmissionActions(feverData, Date.now(), false, submissionResponse);
+      this.handlePostSubmissionActions(dataEntry, Date.now(), false, submissionResponse);
       this.currentQuestion = 1;
     } else {
       switch (submissionResponse.reason) {
         case 'INVALID_DATA':
+          console.log("ant");
           SnackBar.error(Translator.get('system_messages.error.api_data_invalid'));
           break;
         case 'REGEN_DEVICE_ID':
-          this.handlePostSubmissionActions(feverData, Date.now(), true);
+          this.handlePostSubmissionActions(dataEntry, Date.now(), true);
           break;
         case 'NETWORK_STATUS_OFFLINE':
-          this.handlePostSubmissionActions(feverData, Date.now(), true);
+          this.handlePostSubmissionActions(dataEntry, Date.now(), true);
           break;
         default:
           SnackBar.error(submissionResponse.message);
+          console.log("bear");
+          console.log(submissionResponse);
       }
     }
   }
 
-  async handlePostSubmissionActions(feverData, submissionTime, entryGotQueued, submissionResponse) {
-    localStorage.setItem('LATEST_ENTRY', JSON.stringify(feverData));
+  async handlePostSubmissionActions(dataEntry, submissionTime, entryGotQueued, submissionResponse) {
+    localStorage.setItem('LATEST_ENTRY', JSON.stringify(dataEntry));
 
-    if (feverData.gender) localStorage.setItem('GENDER', feverData.gender);
-    if (feverData.birth_year) localStorage.setItem('BIRTH_YEAR', feverData.birth_year);
-    localStorage.setItem('COVID_DIAGNOSIS', feverData.diagnosed_covid19);
+    localStorage.setItem('COVID_DIAGNOSIS', dataEntry.diagnosed_covid19);
 
     localStorage.setItem('LAST_ENTRY_SUBMISSION_TIME', submissionTime);
 
     if (!entryGotQueued) {
       DataEntryService.setEntriesToIndexedDb(submissionResponse);
+      console.log("dog");
       SnackBar.success(Translator.get('system_messages.success.data_entry'));
 
       // GoogleAnalyticsService.reportSubmission();
@@ -369,6 +316,7 @@ class WorklightDataEntry extends LitElement {
       // }
     } else {
       document.dispatchEvent(new CustomEvent('update-queued-count'));
+      console.log("eel");
       SnackBar.success(Translator.get('system_messages.success.entry_send_failed_queued'));
       this.closeView();
     }
@@ -398,11 +346,12 @@ class WorklightDataEntry extends LitElement {
       const submissionResponse = await DataEntryService.handleDataEntrySubmission(entry, false);
       if (submissionResponse.success) {
         db.delete(QUEUED_ENTRIES, id);
-        await db.add(FEVER_ENTRIES, entry);
+        await db.add(DATA_ENTRIES, entry);
         successfulSyncCount += 1;
       }
       if (i === this.queuedEntries.length - 1) {
         if (successfulSyncCount > 0) {
+          console.log("fox");
           SnackBar.success(Translator.get('system_messages.success.sync_finished'));
           setTimeout(() => {
             window.location.reload();
@@ -413,48 +362,20 @@ class WorklightDataEntry extends LitElement {
   }
 
   async getGeoCodingInputInfo() {
-    const postalCode = this.querySelector('#location-floor').getValue();
-    const country = this.querySelector('#location-building').getValue();
-
-    const geoCodingInfo = await GeolocatorService.getGeoCodingInfoByPostalCodeAndCountry(
-      postalCode,
-      "US"
-      //country.value.id,
-    );
-    localStorage.setItem('LAST_LOCATION', JSON.stringify(geoCodingInfo));
-
-//    if (!geoCodingInfo.countryShort || !geoCodingInfo.coords || !geoCodingInfo.postal_code) {
-//      SnackBar.error(Translator.get('system_messages.error.location_data_invalid'));
-//      return null;
-//    }
+    const place = autocomplete.getPlace();
+    console.log(place.address_components);
+    const floor = this.querySelector('#location-floor').getValue();
+    console.log("Here: " + floor);
+    const address = this.querySelector('#address').getValue();
+    console.log("Here: " + address);
 
     return {
-      country_code: geoCodingInfo.countryShort,
-      location_lat: geoCodingInfo.coords.lat,
-      location_lng: geoCodingInfo.coords.lng,
-      postal_code: geoCodingInfo.postal_code,
+      address: address,
+      floor: floor,
     };
   }
 
-  handlePersonalInfoSubmit(skip = true) {
-
-    if (!skip && (!this.validateAge(this.birthYear) || !this.validateGender(this.gender))) {
-      return;
-    }
-
-    if (skip) {
-      this.birthYear = null;
-      this.gender = null;
-    }
-    this.nextQuestion(() => this.handleDialogFocus('#question-4'), 4);
-  }
-
-  handlePersonalInfoSkip() {
-    localStorage.setItem("DEMOGRAPHICS_SKIPPED", "yes");
-    this.handlePersonalInfoSubmit(true);
-  }
-
-  // function to hadle feeling selection
+  // function to handle feeling selection
   // Also changes reated to question position change in next few functions
   handleFeelingSubmit(feeling) {
     this.feeling = feeling;
@@ -462,11 +383,11 @@ class WorklightDataEntry extends LitElement {
       this.symptoms = [];
 
       if (this.latestEntry) //this means there this is not the first time
-        this.handleSubmit();
-      //this.nextQuestion(() => this.handleDialogFocus('#question-3'), 3);
+        //this.handleSubmit();
+      this.nextQuestion(() => this.handleDialogFocus('#question-3'), 3);
       else
-        //this.nextQuestion(() => this.handleDialogFocus('#question-3'), 3);
-      this.nextQuestion(() => this.handleDialogFocus('#question-4'), 4);
+        this.nextQuestion(() => this.handleDialogFocus('#question-3'), 3);
+      //this.nextQuestion(() => this.handleDialogFocus('#question-4'), 4);
     }
     else {
       this.nextQuestion(() => this.handleDialogFocus('#question-2'), 2);
@@ -486,6 +407,9 @@ class WorklightDataEntry extends LitElement {
      // this.nextQuestion(() => this.handleDialogFocus('#question-3'), 3);
     // this.nextQuestion(() => this.handleDialogFocus('#question-4'), 4);
   this.nextQuestion(() => this.handleDialogFocus('#question-4'), 4);
+  }
+
+  handleVisitSubmit() {
   }
 
   // function to handle back button as some steps are now optional
@@ -569,13 +493,15 @@ class WorklightDataEntry extends LitElement {
   }
 
   handleDialogFocus(dialogId) {
-    if (dialogId == "#question-4")
-      this.createLocationDialog();
+    if (dialogId == "#question-4") 
+      //this.getGeoLocationInfo();
+      //this.initAutocomplete();
+      //this.createLocationDialog();
     //this.getGeoLocationInfo();
-
     this.querySelector(dialogId).focus();
     tabtrap.trapAll(dialogId);
   }
+  
 
   handleSymptomKeyDown(e) {
     if (e.code === 'Space') {
@@ -589,29 +515,40 @@ class WorklightDataEntry extends LitElement {
       target = target.parentNode;
     }
     if (this.symptoms.includes(target.id)) {
+console.log('includes')
+console.log(target.id);
       this.symptoms.splice(this.symptoms.indexOf(target.id), 1);
       target.classList.remove('symptom--selected');
     } else {
       this.symptoms.push(target.id);
+console.log('push')
+console.log(target.id);
       target.classList.add('symptom--selected');
     }
   }
 
-  getBirthYearRanges() {
-    return [
-      { name: '1900-1909', value: '1900' },
-      { name: '1910-1919', value: '1910' },
-      { name: '1920-1929', value: '1920' },
-      { name: '1930-1939', value: '1930' },
-      { name: '1940-1949', value: '1940' },
-      { name: '1950-1959', value: '1950' },
-      { name: '1960-1969', value: '1960' },
-      { name: '1970-1979', value: '1970' },
-      { name: '1980-1989', value: '1980' },
-      { name: '1990-1999', value: '1990' },
-      { name: '2000-2009', value: '2000' },
-      { name: '2010-2019', value: '2010' },
-    ];
+  handleActivityKeyDown(e) {
+    if (e.code === 'Space') {
+      this.handleActivityAdd(e);
+    }
+  }
+
+  handleActivityAdd(e) {
+    let { target } = e;
+    if (target.nodeName === 'P') {
+      target = target.parentNode;
+    }
+    if (this.activities.includes(target.id)) {
+console.log('includes')
+console.log(target.id);
+      this.activities.splice(this.activities.indexOf(target.id), 1);
+      target.classList.remove('activity--selected');
+    } else {
+console.log('push')
+console.log(target.id);
+      this.activities.push(target.id);
+      target.classList.add('activity--selected');
+    }
   }
 
   render() {
@@ -650,8 +587,12 @@ class WorklightDataEntry extends LitElement {
         ${this.getSymptomsFields()}
          <div class="policy-link"><a href="https://pandemicresponsecommons.org/wp-content/uploads/2020/07/CCSR-Privacy-Policy.pdf" target="_blank">Privacy Policy</a></div>
       </div>
-      <div class="entry-window mdc-elevation--z9" id="question-3" tabindex="0">
-        ${this.getPersonalQuestions()}
+      <div
+        class="entry-window mdc-elevation--z9"
+        id="question-3"
+        tabindex="0"
+      >
+        ${this.getActivitiesFields()}
          <div class="policy-link"><a href="https://pandemicresponsecommons.org/wp-content/uploads/2020/07/CCSR-Privacy-Policy.pdf" target="_blank">Privacy Policy</a></div>
       </div>
       
@@ -668,6 +609,7 @@ class WorklightDataEntry extends LitElement {
   }
 
   getPersonalQuestions() {
+    return;
     return html`
     <div
         class="back-button"
@@ -679,7 +621,6 @@ class WorklightDataEntry extends LitElement {
         <h2>${Translator.get('entry.new_entry')}</h2>
         <p class="subtitle">${Translator.get('entry.first_time_disclaimer')}</p>
       </div>
-      ${this.getYearOfBirthInput()} ${this.getGenderInput()}
       <div style="display:flex">
         <div class="proceed-button">
           <button class="mdc-button mdc-button--raised" @click="${() => this.handlePersonalInfoSubmit(false)}">
@@ -809,7 +750,7 @@ class WorklightDataEntry extends LitElement {
         </div>
         <div
           class="symptom"
-          id="symptom_shaking"
+          id="symptom_nausea"
           @keypress="${this.handleSymptomKeyDown}"
           @click="${this.handleSymptomAdd}"
           tabindex="0"
@@ -871,7 +812,94 @@ class WorklightDataEntry extends LitElement {
     `;
   }
 
+  getActivitiesFields() {
+    return html`
+      <div
+        class="back-button"
+        @click="${() => this.previousQuestion(() => this.handleDialogFocus('#question-1'), 1)}"
+      >
+        <material-icon icon="keyboard_arrow_left"></material-icon>${Translator.get('back')}
+      </div>
+      <div class="title-holder">
+        <h2>${Translator.get('entry.new_entry')}</h2>
+        <p class="activities-title">Activity summary</p>
+      </div>
+      <!--
+      <p class="subtitle">${Translator.get('entry.questions.choose_all_that_apply')}</p>
+      -->
+      <div class="activity-holder">
+        <div
+          class="activity"
+          id="visited_bar"
+          @keypress="${this.handleActivityKeyDown}"
+          @click="${this.handleActivityAdd}"
+          tabindex="0"
+        >
+          <p>Bar/tavern</p>
+        </div>
+        <div
+          class="activity"
+          id="visted_restaurant"
+          @keypress="${this.handleActivityKeyDown}"
+          @click="${this.handleActivityAdd}"
+          tabindex="0"
+        >
+          <p>Restaurant (dine-in)</p>
+        </div>
+        <div
+          class="activity"
+          id="visited_concert"
+          @keypress="${this.handleActivityKeyDown}"
+          @click="${this.handleActivityAdd}"
+          tabindex="0"
+        >
+          <p>Concert</p>
+        </div>
+        <div
+          class="activity"
+          id="visited_nightclub"
+          @keypress="${this.handleActivityKeyDown}"
+          @click="${this.handleActivityAdd}"
+          tabindex="0"
+        >
+          <p>Trump rally</p>
+        </div>
+        <div
+          class="activity"
+          id="visited_church"
+          @keypress="${this.handleActivityKeyDown}"
+          @click="${this.handleActivityAdd}"
+          tabindex="0"
+        >
+          <p>Church</p>
+        </div>
+        <div
+          class="activity"
+          id="visited_gathering"
+          @keypress="${this.handleActivityKeyDown}"
+          @click="${this.handleActivityAdd}"
+          tabindex="0"
+        >
+          <p>Large gathering</p>
+        </div>
+      </div>
+
+      <div class="proceed-button">
+        <button class="mdc-button mdc-button--raised" @click="${this.handleSymptomSubmit}">
+          <div class="mdc-button__ripple"></div>
+
+          <i class="material-icons mdc-button__icon" aria-hidden="true">done</i>
+          <span class="mdc-button__label">${Translator.get('entry.questions.set_symptoms')}</span>
+        </button>
+      </div>
+    `;
+  }
+
   getGeoLocationInput() {
+    if (document.querySelectorAll('[aria-labelledby=autocomplete]').item(0)) {
+      initAutocomplete();
+
+    }
     return html`
       <div
         class="back-button"
@@ -886,14 +914,13 @@ class WorklightDataEntry extends LitElement {
         </p>
       </div>
       <div class="entry-field">
-        <div class="location-select-fields">
-          <select-field
-            id="location-building"
-            label="building"
-            .options="${this.buildingSelectionOptions}"
-            selectedValueIndex="${this.selectedBuildingIndex}"
-            value=""
-          ></select-field>
+          <input-field 
+            fieldId="autocomplete"
+            placeholder="address"
+            onFocus="geolocate()"
+            id="address"
+            type="text"
+          ></input-field>
           <input-field
             placeHolder="floor"
             fieldId="location-floor"
@@ -917,42 +944,6 @@ class WorklightDataEntry extends LitElement {
     `;
   }
 
-  getYearOfBirthInput() {
-    return html`
-      <div class="entry-field">
-        <p>${Translator.get('entry.questions.birth_year')}</p>
-        <div class="birth-year-range-selectors">
-          ${BirthYearRangeSelector.getBirthYearRanges().map(
-      range =>
-        html`
-                <birth-year-range-selector
-                  @birth-year-selected="${e => {
-            this.birthYear = e.detail.birthYear;
-          }}"
-                  label=${range.name}
-                  value=${range.value}
-                  ?selected="${this.birthYear === range.value}"
-                ></birth-year-range-selector>
-              `,
-    )}
-        </div>
-      </div>
-    `;
-  }
-
-  getGenderInput() {
-    return html`
-      <div class="entry-field">
-        <p>${Translator.get('entry.questions.gender_in_passport')}</p>
-        <gender-input
-          gender="${this.gender}"
-          @gender-changed="${e => {
-        this.gender = e.detail.gender;
-      }})}"
-        ></gender-input>
-      </div>
-    `;
-  }
 
   getSubmitButton() {
     return html`

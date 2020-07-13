@@ -18,7 +18,7 @@ RUN /usr/lib/docker-helpers/apt-setup && \
         uwsgi-plugin-python3 && \
     /usr/lib/docker-helpers/apt-cleanup
 
-ENV USER covidapp
+ENV USER worklight
 ENV APPDIR /app
 
 RUN adduser --system --disabled-password --group --gecos "${USER},,," "${USER}"

@@ -1,7 +1,8 @@
 /* eslint-disable class-methods-use-this,no-param-reassign */
 import { LitElement, html } from 'lit-element';
 import Translator from '../util/translator.js';
-import DataEntryService from '../services/data-entry-service.js';
+import DataEntryService from '../services/worklight-data-entry-service.js';
+
 
 class WorklightNavigation extends LitElement {
   static get properties() {

@@ -3,7 +3,7 @@
 from setuptools import find_packages
 from setuptools import setup
 
-VERSION_FILE = 'covidapp/__init__.py'
+VERSION_FILE = 'worklight/__init__.py'
 
 
 def get_version(version_file=VERSION_FILE):
@@ -13,7 +13,7 @@ def get_version(version_file=VERSION_FILE):
     """
     version = '0.0.0'
     try:
-        from covidapp import __version__
+        from worklight import __version__
         version = __version__
     except ImportError:
         # See <https://stackoverflow.com/a/67692/899560>
@@ -31,14 +31,14 @@ def get_requirements():
 
 
 setup(
-    name='covidapp',
+    name='worklight',
     version=get_version(),
-    description='covidapp',
+    description='worklight',
     author='OCC',
     author_email='covidstoplight@occ-data.org',
     url='https://covidapp.occ-pla.net/',
-    packages=find_packages('covidapp'),
-    package_dir={'': 'covidapp'},
+    packages=find_packages('worklight'),
+    package_dir={'': 'worklight'},
     python_requires='>=3',
     include_package_data=True,
     install_requires=get_requirements(),

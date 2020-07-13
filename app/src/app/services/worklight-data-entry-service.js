@@ -3,7 +3,7 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import dayOfYear from 'dayjs/plugin/dayOfYear';
-import DBUtil, { QUEUED_ENTRIES, FEVER_ENTRIES } from '../util/db-util.js';
+import DBUtil, { QUEUED_ENTRIES, DATA_ENTRIES } from '../util/db-util.js';
 import Translator from '../util/translator.js';
 // import GoogleAnalyticsService from './google-analytics-service.js';
 
@@ -27,25 +27,25 @@ const apiStatsUrl = `${apiBase}/stats`;
 const apiLocationUrl = `${apiBase}/location`;
 
 export default class DataEntryService {
-  static async handleDataEntrySubmission(feverData, addToDbOnFail = true) {
+  static async handleDataEntrySubmission(dataEntry, addToDbOnFail = true) {
     // Here it is
-    return true;
+    //return true;
     try {
       // Set or generate device ID
-      this.setDeviceId(feverData);
+      this.setDeviceId(dataEntry);
 
       const response = await this.callWithRetry(
         async () =>
           fetch(apiSubmitUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(feverData),
+            body: JSON.stringify(dataEntry),
           }),
         r => {
           if (!r.success && r.status === 409) {
             // The newly generated device id is already taken, so we regenerate and retry
             this.resetDeviceId();
-            this.setDeviceId(feverData);
+            this.setDeviceId(dataEntry);
             return true;
           }
           return false;
@@ -54,7 +54,7 @@ export default class DataEntryService {
       if (!response.ok) {
         if (response.status === 409) {
           if (addToDbOnFail) {
-            this.addToDb(feverData);
+            this.addToDb(dataEntry);
           }
           this.resetDeviceId();
           return { success: false, reason: 'REGEN_DEVICE_ID' };
@@ -66,15 +66,15 @@ export default class DataEntryService {
       return resJson;
     } catch (err) {
       if (addToDbOnFail) {
-        this.addToDb(feverData);
+        this.addToDb(dataEntry);
       }
       return { success: false, reason: 'NETWORK_STATUS_OFFLINE' };
     }
   }
 
-  static async addToDb(feverData) {
+  static async addToDb(dataEntry) {
     const db = await DBUtil.getInstance();
-    db.add(QUEUED_ENTRIES, feverData);
+    db.add(QUEUED_ENTRIES, dataEntry);
   }
 
   static handleAPIErrorMessages(resJson) {
@@ -120,20 +120,20 @@ export default class DataEntryService {
       // the values in IDB. if yes, delete those values to make room for new ones.
 
       // Example is if you've prodded with the DB and changed the timestamp_modified for example.
-      const allEntries = await db.getAll(FEVER_ENTRIES);
+      const allEntries = await db.getAll(DATA_ENTRIES);
       //dayjs.extend(utc);
       const submissionHistoryTimeStamps = submissionHistory.map(entry => entry.timestamp);
       allEntries.map(async entry => {
         if (!submissionHistoryTimeStamps.includes(entry.timestamp)) {
-          await db.delete(FEVER_ENTRIES, entry.timestamp);
+          await db.delete(DATA_ENTRIES, entry.timestamp);
         }
       });
 
       const submissionHistoryLength = submissionHistory.length - 1;
       submissionHistory.map(async (submission, i) => {
-        const entryInDb = await db.get(FEVER_ENTRIES, submission.timestamp);
+        const entryInDb = await db.get(DATA_ENTRIES, submission.timestamp);
         if (!entryInDb) {
-          await db.add(FEVER_ENTRIES, submission);
+          await db.add(DATA_ENTRIES, submission);
         }
         if (i >= submissionHistoryLength && typeof document !== 'undefined') {
           document.dispatchEvent(new CustomEvent('update-submission-list'));
@@ -178,16 +178,16 @@ export default class DataEntryService {
 
   //
   static setDeviceId(data) {
-    const feverData = data;
+    const dataEntry = data;
     let deviceId = localStorage.getItem('DEVICE_ID');
     if (!deviceId) {
       deviceId = this.createDeviceId();
-      feverData.new_device_id = true;
+      dataEntry.new_device_id = true;
       localStorage.setItem('DEVICE_ID', deviceId);
     } else {
-      feverData.new_device_id = false;
+      dataEntry.new_device_id = false;
     }
-    feverData.device_id = deviceId;
+    dataEntry.device_id = deviceId;
   }
 
   /**

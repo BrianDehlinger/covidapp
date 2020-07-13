@@ -2,7 +2,7 @@ import { LitElement, html } from 'lit-element';
 import Translator from '../util/translator.js';
 import logoImg from '../../assets/images/worklight.png';
 import PRCImg from '../../assets/images/prc-logo.png';
-import DataEntryService from '../services/data-entry-service.js';
+import DataEntryService from '../services/worklight-data-entry-service.js';
 import PWAService from '../services/pwa-service.js';
 import '../components/ios-pwa-install-prompt.js';
 

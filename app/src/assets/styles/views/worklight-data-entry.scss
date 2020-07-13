@@ -361,6 +361,50 @@ $symptom-color: rgba(0, 0, 0, 0.5);
   }
 }
 
+.activities-title {
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+}
+
+$activity-color: rgba(0, 0, 0, 0.5);
+
+.activity-holder {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 60%;
+  align-items: center;
+
+  .activity {
+    cursor: pointer;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    border: 2px solid $symptom-color;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    transition: 0.1s linear;
+
+    &:focus {
+      background-color: change-color($activity-color, $lightness: 10%);
+    }
+
+    &--selected {
+      background: #0898ad;
+
+      p {
+        color: #fff;
+      }
+    }
+
+    p {
+      font-weight: 500;
+      margin: 0;
+    }
+  }
+}
+
 // common styles for vertical buttons
 .vertical-button-normal-justify {
   justify-content: normal !important;
@@ -445,32 +489,6 @@ label {
   font-size: 0.9rem;
 }
 
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  height: 32px;
-  width: 32px;
-  border-radius: 50%;
-  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
-  background: #fff;
-  border: 1px solid;
-}
-
-input[type="range"]::-moz-range-thumb {
-  -webkit-appearance: none;
-  height: 32px;
-  width: 32px;
-  border-radius: 50%;
-  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
-  background: #fff;
-  border: 1px solid;
-}
-
-input[type="range"]::-webkit-slider-container {
-}
-
-input[type="range"]::-webkit-slider-runnable-track {
-}
-
 @media only screen and (max-width: 780px) {
   .entry-dialog {
     margin-bottom: 0 !important;
@@ -526,36 +544,23 @@ input[type="range"]::-webkit-slider-runnable-track {
         justify-content: flex-start;
       }
     }
+
+    &--activities {
+      flex-direction: column;
+
+      p {
+        justify-content: flex-start;
+      }
+    }
   }
 
   .symptom-holder {
     width: 100%;
   }
 
-  .fever-meter-field {
-    height: 100%;
 
-    .fever-meters {
-      .fever-slider {
-        height: 70%;
-      }
-
-      .fever-amount-display {
-        .fever-amount-field {
-          width: 3.75rem;
-        }
-
-        p {
-          margin: 0;
-        }
-      }
-    }
-  }
-
-  .fever-not-measured-prompt {
-    .fever-not-measured-buttons {
-      margin: 0;
-    }
+  .activity-holder {
+    width: 100%;
   }
 
   .vertical-button-holder {
@@ -568,10 +573,6 @@ input[type="range"]::-webkit-slider-runnable-track {
 }
 
 @media only screen and (max-width: 400px) {
-  .temperature-title {
-    margin: 0;
-  }
-
   .entry-dialog {
     margin-bottom: 3rem !important;
   }
@@ -589,35 +590,8 @@ input[type="range"]::-webkit-slider-runnable-track {
     }
   }
 
-  .fever-meter-field {
-    .fever-meters {
-      .proceed-button {
-        margin: 1rem 0;
-      }
-
-      .fever-slider {
-        height: 60%;
-      }
-    }
-  }
-
   p.subtitle {
     margin: 0 0 0.5rem;
   }
 
-  .fever-not-measured-prompt {
-    p {
-      margin: 0 0 0.5rem !important;
-    }
-
-    .fever-not-measured-buttons {
-      div {
-        flex-basis: 50%;
-
-        button {
-          font-size: 0.5rem;
-        }
-      }
-    }
-  }
 }

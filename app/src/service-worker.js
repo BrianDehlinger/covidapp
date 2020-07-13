@@ -5,22 +5,9 @@ import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { clientsClaim, skipWaiting } from 'workbox-core';
-import * as firebase from 'firebase/app';
-import 'firebase/messaging';
 import dayjs from 'dayjs';
-import DataEntryService from './app/services/data-entry-service.js';
+import DataEntryService from './app/services/worklight-data-entry-service.js';
 import Translator from './app/util/translator.js';
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyCPAiiuIPv0-0gEn_6kjjBBJt8DUasgo6M',
-  authDomain: 'fevermap-95d71.firebaseapp.com',
-  databaseURL: 'https://fevermap-95d71.firebaseio.com',
-  projectId: 'fevermap-95d71',
-  storageBucket: 'fevermap-95d71.appspot.com',
-  messagingSenderId: '825429781563',
-  appId: '1:825429781563:web:3ff8c7f6e4bbf23c10c01e',
-  measurementId: 'G-3X5E6RLZBN',
-};
 
 self.__WB_DISABLE_DEV_LOGS = true;
 
@@ -86,8 +73,6 @@ self.addEventListener('message', e => {
   switch (e.data.type) {
     case 'SET_CLIENT_INFORMATION':
       self.CLIENT_ID = e.data.clientId;
-      self.BIRTH_YEAR = e.data.birthYear;
-      self.GENDER = e.data.gender;
       self.COVID_DIAGNOSIS = e.data.covidDiagnosis;
       self.LOCATION_DATA = e.data.locationData;
       break;
@@ -150,22 +135,22 @@ const createHealthStatusNotification = e => {
   );
 };
 
-const initFirebaseMessaging = () => {
+//const initFirebaseMessaging = () => {
   // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
+//  firebase.initializeApp(firebaseConfig);
 
-  const messaging = firebase.messaging();
+//  const messaging = firebase.messaging();
 
-  messaging.setBackgroundMessageHandler(e => {
+//  messaging.setBackgroundMessageHandler(e => {
     // Prevent duplicates by checking if push handler already handled this notification
-    const messageData = e.data;
-    if (messageData.timestamp === self.LAST_PUSH_NOTIFICATION_TIMESTAMP) {
-      return null;
-    }
-    self.LAST_PUSH_NOTIFICATION_TIMESTAMP = e.data.json().data.timestamp;
-    return createHealthStatusNotification();
-  });
-};
+//    const messageData = e.data;
+//    if (messageData.timestamp === self.LAST_PUSH_NOTIFICATION_TIMESTAMP) {
+//      return null;
+//    }
+//    self.LAST_PUSH_NOTIFICATION_TIMESTAMP = e.data.json().data.timestamp;
+//    return createHealthStatusNotification();
+//  });
+//};
 
 self.addEventListener('push', e => {
   const messageData = e.data.json().data;
@@ -196,12 +181,8 @@ const openAppFromNotification = (e, skipToEntryView) => {
 const generateHealthyFeverDataSubmissionObject = () => ({
   device_id: self.CLIENT_ID,
   fever_temp: null,
-  birth_year: self.BIRTH_YEAR,
-  gender: self.GENDER,
-  location_country_code: self.LOCATION_DATA.location_country_code,
-  location_postal_code: self.LOCATION_DATA.location_postal_code,
-  location_lng: self.LOCATION_DATA.location_lng.toString(),
-  location_lat: self.LOCATION_DATA.location_lat.toString(),
+  location_address: self.LOCATION_DATA.address,
+  location_floor: self.LOCATION_DATA.floor,
   symptom_cough: false,
   symptom_difficulty_breathing: false,
   symptom_fever: false,
@@ -212,6 +193,12 @@ const generateHealthyFeverDataSubmissionObject = () => ({
   symptom_loss_of_taste: false,
   symptom_muscle_pain: false,
   diagnosed_covid19: self.COVID_DIAGNOSIS,
+  visited_bar: false,
+  visited_church: false,
+  visited_concert: false,
+  visited_gathering: false,
+  visited_nightclub: false,
+  visited_restaurant: false,
 });
 
 const handleSuccessfulNotificationSubmit = () => {
@@ -266,4 +253,3 @@ self.onnotificationclick = e => {
 };
 
 cleanupOutdatedCaches();
-initFirebaseMessaging();
