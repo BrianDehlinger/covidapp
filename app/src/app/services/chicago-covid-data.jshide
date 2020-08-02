@@ -1,0 +1,56 @@
+/* eslint-disable */
+import zips from '../../assets/countrydata/chicago-zipcodes.json';
+
+const url = 'https://data.cityofchicago.org/resource/yhhz-zm2v.json'
+
+export default class ChicagoDataService {
+  static async getChicagoData {
+    return fetch(`${url}`)
+      .then(res => res.json())
+      .then(res => ChicagoDataService.parseResult(res))
+      .catch(() => ChicagoDataService.returnErrorMessage());
+  }
+
+  static parseResult(res) {
+    if (res.status !== 'OK' || res.results.length < 1) {
+      return ChicagoDataService.returnErrorMessage();
+    }
+
+    const dataComponents = [];
+
+    res.results.forEach((result) => {
+      Object.entries(result).forEach(([key, value]) => {
+        // Only want results for Chicago zipcodes
+        if(key === "zip_code" && zipcodes.hasOwnProperty(key){
+          dataComponents.push(...result);
+        }
+      });
+
+    const parsedData = ChicagoDataServce.parseDataComponenets(dataComponents);
+    return {
+      success: true,
+      zipcode: parsedData["zip_code"],
+      week_end: parsedData["week_end"],
+      datum: parsedData["case_rate_weekly"]
+    };
+  }
+
+  static parseDataComponents(DataComponents) {
+    function findComponent(type) {
+      return dataComponents.find(a => a.types.indexOf(type) !== -1);
+    }
+ 
+    const arr = Object.week_number;
+
+
+    return {
+      "zip_code": findComponent("zip_code"),
+      "week_end": findComponent("week_end"),
+      "case_rate_weekly": findComponent("case_rate_weekly")
+    };
+  }
+
+  static returnErrorMessage() {
+    return { success: false, message: 'COULD_NOT_LOAD_DATA' };
+  }
+}

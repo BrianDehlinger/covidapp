@@ -4,11 +4,11 @@
   "covidapp_title": "",
   "back": "Back",
   "today": "Today",
-  "user_description": "You are a %{age} year-old %{gender}, with %{diagnosis} diagnosis",
-  "no_demographics": "You did not enter your demographic information. Click on pencil icon to add the information",
+  "user_description": "Age: %{age}, gender: %{gender}, location: %{location}, %{diagnosis} diagnosis. Click on the pencil icon to edit.",
+  "no_demographics": "You chose not to share your age and gender. Click on pencil icon if you would like to add the information",
   "a_covid_diagnosis": "positive COVID-19",
   "no_covid_diagnosis": "no positive COVID-19",
-
+  "zip_code": "Your Zip Code is %{postalcode}. Click on pencil icon to change",
   "cookie": {
     "button_text": "Got it, thanks!"
   },
@@ -60,6 +60,7 @@
       "gender_in_passport": "Gender",
       "male": "Male",
       "female": "Female",
+      "unset" : "not specified",
       "whats_your_location": "What's your location?",
       "city": "City",
       "postal_code": "Zip code",
@@ -88,10 +89,10 @@
     "add_entry": "New report"
   },
   "stats": {
-    "stats": "Statewide Summary",
+    "stats": "COVID-19 in Chicago",
     "number_reporting": "Number of people reporting",
     "number_reports": "Number of health reports",
-    "description": "Darker areas have more reports of people feeling unwell"
+    "description": "Case rate per 10000 people for past week"
   },
   "system_messages": {
     "success": {

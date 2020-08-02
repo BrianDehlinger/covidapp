@@ -2,7 +2,7 @@
 import { LitElement, html } from 'lit-element';
 import Translator from '../util/translator.js';
 // import GoogleAnalyticsService from '../services/google-analytics-service.js';
-import IllinoisMap from '../components/illinois-map.js';
+import ChicagoMap from '../components/chicago-map.js';
 
 class StateView extends LitElement {
   static get properties() {
@@ -17,7 +17,7 @@ class StateView extends LitElement {
     return html`
       <div class="container view-wrapper">
         <div class="state-view-content">
-           <visualization-map-illinois></visualization-map-illinois>  
+           <visualization-map-chicago></visualization-map-chicago>  
         </div>
       </div>
     `;

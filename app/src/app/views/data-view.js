@@ -5,12 +5,9 @@ import utc from 'dayjs/plugin/utc';
 import Translator from '../util/translator.js';
 import DBUtil, { FEVER_ENTRIES, QUEUED_ENTRIES } from '../util/db-util.js';
 import GeolocatorService from '../services/geolocator-service.js';
-import FeverDataUtil from '../util/fever-data-util.js';
-// import GoogleAnalyticsService from '../services/google-analytics-service.js';
 import ScrollService from '../services/scroll-service.js';
 import DataEntryService from '../services/data-entry-service.js';
 import SnackBar from '../components/snackbar.js';
-// import NotificationService from '../services/notification-service.js';
 import BirthYearRangeSelector from '../components/birth-year-range-selector.js';
 import feelings from '../util/feelings.js';
 import '../components/feeling-chart.js';
@@ -34,6 +31,7 @@ class DataView extends LitElement {
 
       setGender: { type: String },
       setBirthYear: { type: String },
+      setZipCode: { type: String },
       setCovidDiagnosis: { type: Boolean },
       showEditFields: { type: Boolean },
 
@@ -102,7 +100,15 @@ class DataView extends LitElement {
     this.previousSubmissions = null;
     this.showEditFields = false;
 
-    // this.firstTimeSubmitting = this.setGender == null || this.setBirthYear == null;
+    const lastZip = localStorage.getItem('LAST_ZIPCODE');
+    const lastLocation = localStorage.getItem('LAST_LOCATION');
+
+    this.setZipCode = lastZip 
+                        ? lastZip 
+                        : (lastLocation 
+                          ? JSON.parse(lastLocation).postal_code
+                          : false);
+
     this.firstTimeSubmitting = localStorage.getItem('LATEST_ENTRY') ? false : true;
 
     this.getPreviousSubmissionsFromIndexedDb();
@@ -138,19 +144,12 @@ class DataView extends LitElement {
       this.getQueuedEntriesFromIndexedDb();
     });
 
-    // RemoveNotifications
-    // document.addEventListener('update-notification-subscription-status', () => {
-    //   this.hasSubscribedToTopic = localStorage.getItem('NOTIFICATION_TOPIC');
-    // });
 
-    // RemoveNotifications
-    // if (this.firstTimeSubmitting || this.isFromNotification()) {
     if (this.firstTimeSubmitting) {
       this.showEntryDialog();
       window.history.pushState({}, '', `/`);
     }
     this.getQueuedEntriesFromIndexedDb();
-    // GoogleAnalyticsService.reportNavigationAction('Your Data View');
     this.getSubmissionStats();
 
     document.addEventListener('submission-stats-update', () => {
@@ -232,10 +231,6 @@ class DataView extends LitElement {
     }
 
     this.nextBadge = this.badgeForStreak.find(b => b.streak > streak);
-    // if (nextBadge)
-    //   this.badgeProgress = (nextBadge.streak - streak) / 10;
-    // else
-    //   this.badgeProgress = 0;
 
   }
 
@@ -355,8 +350,11 @@ class DataView extends LitElement {
   }
 
   getAge() {
-    const age = dayjs(new Date()).year() - this.setBirthYear;
-    return `${age - 10}-${age}`;
+    if (this.setBirthYear) {
+      const age = dayjs(new Date()).year() - this.setBirthYear;
+      return `${age - 10}-${age}`;
+    }
+    return Translator.get('entry.questions.unset');
   }
 
   handleAgeChange(newAge) {
@@ -373,32 +371,15 @@ class DataView extends LitElement {
   }
 
   handleSaveDemographics() {
+    this.setZipCode = this.querySelector('#location-postal-code').getValue();
     localStorage.setItem('GENDER', this.setGender);
     localStorage.setItem('BIRTH_YEAR', this.setBirthYear);
     localStorage.setItem('COVID_DIAGNOSIS', this.setCovidDiagnosis);
+    localStorage.setItem('LAST_ZIP', this.setZipCode);
 
     this.showEditFields = false;
     ScrollService.scrollToTop();
   }
-
-  // handleSocialShare() {
-  //   FB.ui({
-  //     display: 'popup',
-  //     method: 'share',
-  //     href: 'https://pandemicresponsecommons.org/',
-  //     hashtag: '#covid19',
-  //     quote: `${Translator.get('social.quote')}`
-  //   }, function (response) { });
-  // }
-  // SocialShare: below code is copied form html
-  // <div>
-  //           <material-button
-  //             @button-clicked="${this.handleSocialShare}"
-  //             class="share-button"
-  //             icon="share"
-  //             label="${Translator.get('social.share_button_text')}"
-  //           ></material-button>
-  //         </div>
 
   async syncQueuedEntries() {
     const db = await DBUtil.getInstance();
@@ -603,15 +584,23 @@ class DataView extends LitElement {
   // }
 
   getGenderTranslated() {
-    return this.setGender === 'M'
-      ? Translator.get('entry.questions.male').toLowerCase()
-      : Translator.get('entry.questions.female').toLowerCase();
+    return this.setGender 
+      ? this.setGender === 'M'
+        ? Translator.get('entry.questions.male').toLowerCase()
+        : Translator.get('entry.questions.female').toLowerCase()
+      : Translator.get('entry.questions.unset');
   }
 
   getCovidStatusTranslated() {
     return this.setCovidDiagnosis
       ? Translator.get('a_covid_diagnosis')
       : Translator.get('no_covid_diagnosis');
+  }
+
+  getZipCode() {
+    return this.setZipCode
+     ? this.setZipCode
+     : Translator.get('entry.questions.unset');
   }
 
   createPersistentDataFields() {
@@ -621,11 +610,12 @@ class DataView extends LitElement {
     return html`
       <div class="persistent-info-fields">
         <p>
-          ${ (!this.setBirthYear && !this.setGender) ? Translator.get('no_demographics') : Translator.get('user_description', {
+          ${ Translator.get('user_description', {
       age: this.getAge(),
       gender: this.getGenderTranslated(),
       diagnosis: this.getCovidStatusTranslated(),
-    })}.
+      location: this.getZipCode()
+    })}
         </p>
         <material-icon
           tabindex="0"
@@ -664,11 +654,21 @@ class DataView extends LitElement {
             @gender-changed="${e => this.handleGenderChange(e.detail.gender)}"
           ></gender-input>
         </div>
-        <p>${Translator.get('entry.questions.positive_covid_diagnosis')}</p>
+         <p>
+          <div class="localtion-select-fields">
+            <input-field
+              placeHolder="${Translator.get('entry.questions.postal_code')}"
+              fieldId="location-postal-code"
+              id="location-postal-code"
+            value="${this.setZipCode ? this.setZipCode : ''}"
+          </input-field>
+          </div>
+
         <div
           class="persistent-info-editing-fields--covid-input"
           @click="${() => this.handleCovidDiagnosisChange()}"
         >
+
           <div class="mdc-form-field">
             <div class="mdc-checkbox">
               <input

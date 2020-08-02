@@ -142,7 +142,7 @@ class CovidappNavigation extends LitElement {
           <material-icon icon="person"></material-icon>
           <p>${Translator.get('entry.data_entry')}</p>
         </div>
-        ${this.currentParticipantCount > 2000 ?
+        ${this.currentParticipantCount >= 0 ?
         html`
         <div
           tabindex="0"
