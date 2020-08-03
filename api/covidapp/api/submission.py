@@ -126,15 +126,21 @@ class SubmissionResource(Resource):
             errors += ('feeling', 'Incorrect value for feeling')
 
         if data['birth_year'] is not None:
-            if not re.fullmatch(r'[12][90][0-9][0-9]', data['birth_year']):
+            if re.match(r'null', data['birth_year'], re.IGNORECASE):
+                # Convert string to None
+                data['birth_year'] = None
+            elif not re.fullmatch(r'[12][90][0-9][0-9]', data['birth_year']):
                 errors += ('birth_year', 'Value not a year between 1900 and 2020')
 
         if data['gender'] is not None:
-            if not re.fullmatch(r'[MF]{1}', data['gender']):
+            if re.match(r'null', data['gender'], re.IGNORECASE):
+                # Convert string to None
+                data['gender'] = None
+            elif not re.fullmatch(r'[MF]{1}', data['gender']):
                 errors += ('gender', 'Value not M or F')
 
         if not re.fullmatch(r'[A-Z]{2}', data['location_country_code']):
-            errors += ('location_country_code', 'Value not two capitals')
+                errors += ('location_country_code', 'Value not two capitals')
 
         if not re.fullmatch(r'[0-9a-z-A-Z-\. ]{4,10}', data['location_postal_code']):
             errors += ('location_postal_code', 'Incorrect characters or length')

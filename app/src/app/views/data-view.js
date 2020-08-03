@@ -100,7 +100,7 @@ class DataView extends LitElement {
     this.previousSubmissions = null;
     this.showEditFields = false;
 
-    const lastZip = localStorage.getItem('LAST_ZIPCODE');
+    const lastZip = localStorage.getItem('LAST_ZIP');
     const lastLocation = localStorage.getItem('LAST_LOCATION');
 
     this.setZipCode = lastZip 
@@ -587,8 +587,10 @@ class DataView extends LitElement {
     return this.setGender 
       ? this.setGender === 'M'
         ? Translator.get('entry.questions.male').toLowerCase()
-        : Translator.get('entry.questions.female').toLowerCase()
-      : Translator.get('entry.questions.unset');
+        : this.getGender === 'F'
+          ? Translator.get('entry.questions.female').toLowerCase()
+          : Translator.get('entry.questions.unset')
+      : Translator.get('entry.questions.unset')
   }
 
   getCovidStatusTranslated() {
@@ -597,10 +599,19 @@ class DataView extends LitElement {
       : Translator.get('no_covid_diagnosis');
   }
 
+  // 
+  // On the first pass through this.setZipCode has the original value of
+  // null but the local storage has been updated in data-entry.
+  //
   getZipCode() {
-    return this.setZipCode
-     ? this.setZipCode
-     : Translator.get('entry.questions.unset');
+    if (this.setZipcode) {
+      return this.setZipcode
+    } else {
+      this.setZipcode = localStorage.getItem('LAST_ZIP');
+      return this.setZipCode
+           ? this.setZipCode
+           : Translator.get('entry.questions.unset');
+    }
   }
 
   createPersistentDataFields() {

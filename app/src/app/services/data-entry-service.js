@@ -5,7 +5,6 @@ import utc from 'dayjs/plugin/utc';
 import dayOfYear from 'dayjs/plugin/dayOfYear';
 import DBUtil, { QUEUED_ENTRIES, FEVER_ENTRIES } from '../util/db-util.js';
 import Translator from '../util/translator.js';
-// import GoogleAnalyticsService from './google-analytics-service.js';
 
 /*  Get API server address from environment variable stored in the webpack build
 /* during build time */

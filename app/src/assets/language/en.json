@@ -92,7 +92,7 @@
     "stats": "COVID-19 in Chicago",
     "number_reporting": "Number of people reporting",
     "number_reports": "Number of health reports",
-    "description": "Case rate per 10000 people for past week"
+    "description": "COVID cases per 10,000 people for past week"
   },
   "system_messages": {
     "success": {

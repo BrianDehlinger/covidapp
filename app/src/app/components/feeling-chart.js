@@ -97,7 +97,6 @@ class FeelingChart extends LitElement {
     let prevDay = null;
     let dayCount = 0;
     parsedData.forEach((item) => {
-      //let d = dayjs.utc(item.timestamp).local().dayOfYear();
       let d = dayjs(item.timestamp).dayOfYear();
       if(prevDay != d) dayCount++;
       prevDay = d;

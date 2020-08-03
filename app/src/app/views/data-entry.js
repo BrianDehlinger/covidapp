@@ -54,6 +54,7 @@ class DataEntry extends LitElement {
     super();
     const latestEntry = JSON.parse(localStorage.getItem('LATEST_ENTRY'));
     const lastLocation = localStorage.getItem('LAST_LOCATION');
+    const lastZip = localStorage.getItem('LAST_ZIP');
     const gender = localStorage.getItem('GENDER');
     const birthYear = localStorage.getItem('BIRTH_YEAR');
     const covidDiagnosed = localStorage.getItem('COVID_DIAGNOSIS');
@@ -69,6 +70,9 @@ class DataEntry extends LitElement {
     this.latestEntry = latestEntry || null;
     this.geoCodingInfo = latestEntry ? JSON.parse(lastLocation) : null;
     this.covidDiagnosed = covidDiagnosed === 'true';
+
+    this.forceLocation = (lastZip == null);
+    this.useGPS = (locationPermission == 'approved');
 
     this.firstTimeSubmitting = (demographicsSkipped == null) && (this.gender == null || this.birthYear == null);
 
@@ -130,12 +134,14 @@ class DataEntry extends LitElement {
 
       document.addEventListener('location-dialog-approve', () => {
         localStorage.setItem("LOCATION_PERMISSION", "approved");
+        this.useGPS = true;
         this.nextQuestion(() => this.handleDialogFocus('#question-4'), 4);
         this.getGeoLocationInfo();
       });
 
       document.addEventListener('location-dialog-decline', () => {
         localStorage.setItem("LOCATION_PERMISSION", "denied");
+        this.useGPS = false;
       });
 
     } else if (this.locationPermission != 'denied') {
@@ -234,11 +240,6 @@ class DataEntry extends LitElement {
     if (!feelingIsValid) {
       return false;
     }
-
-    //const feverTempIsValid = this.validateFeverTemp(feverData.fever_temp);
-    //if (!feverTempIsValid) {
-      //return false;
-    //}
 
     //Lat Long Validation
     // const locationIsValid = this.validateLocation(feverData);
@@ -395,17 +396,19 @@ class DataEntry extends LitElement {
     const postalCode = this.querySelector('#location-postal-code').getValue();
     const country = 1;//this.querySelector('#location-country').getValue();
 
-    const geoCodingInfo = await GeolocatorService.getGeoCodingInfoByPostalCodeAndCountry(
-      postalCode,
-      "US"
-      //country.value.id,
-    );
-    localStorage.setItem('LAST_LOCATION', JSON.stringify(geoCodingInfo));
+
+      const geoCodingInfo = await GeolocatorService.getGeoCodingInfoByPostalCodeAndCountry(
+        postalCode,
+        "US"
+      );
 
     if (!geoCodingInfo.countryShort || !geoCodingInfo.coords || !geoCodingInfo.postal_code) {
-      SnackBar.error(Translator.get('system_messages.error.location_data_invalid'));
+this.forceLocation = true;
+      //SnackBar.error(Translator.get('system_messages.error.location_data_invalid'));
       return null;
     }
+    localStorage.setItem('LAST_ZIP', geoCodingInfo.postal_code);
+    localStorage.setItem('LAST_LOCATION', JSON.stringify(geoCodingInfo));
 
     return {
       country_code: geoCodingInfo.countryShort,
@@ -441,7 +444,10 @@ class DataEntry extends LitElement {
       this.symptoms = [];
 
       if (this.latestEntry) //this means there this is not the first time
-        this.handleSubmit();
+        if (this.forceLocation) 
+          this.nextQuestion(() => this.handleDialogFocus('#question-4'), 4);
+        else
+           this.handleSubmit();
       //this.nextQuestion(() => this.handleDialogFocus('#question-3'), 3);
       else
         this.nextQuestion(() => this.handleDialogFocus('#question-3'), 3);
@@ -458,12 +464,13 @@ class DataEntry extends LitElement {
     //   this.nextQuestion(() => this.handleDialogFocus('#question-5'), 5);
     // else
     // if (this.firstTimeSubmitting)
-    if (this.latestEntry)
+    if (this.latestEntry) 
       this.handleSubmit();
     // this.nextQuestion(() => this.handleDialogFocus('#question-3'), 3);
     else
       this.nextQuestion(() => this.handleDialogFocus('#question-3'), 3);
     // this.nextQuestion(() => this.handleDialogFocus('#question-4'), 4);
+    
   }
 
   // function to handle back button as some steps are now optional
@@ -874,6 +881,9 @@ class DataEntry extends LitElement {
         : ''}"
           ></input-field>
         </div>
+        <div class="persistent-info-editing-fields ${this.useGPS
+             ? ''
+             : ' persistent-info-editing-fields--hidden'}"
         <p class="subtitle">
           ${Translator.get('entry.questions.location_change_subtitle')}
         </p>
@@ -887,6 +897,7 @@ class DataEntry extends LitElement {
             <i class="material-icons mdc-button__icon" aria-hidden="true">my_location</i>
             <span class="mdc-button__label">${Translator.get('entry.questions.use_gps')}</span>
           </button>
+        </div>
         </div>
       </div>
 
