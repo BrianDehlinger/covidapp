@@ -203,7 +203,7 @@ resource "aws_db_instance" "stoplightdb" {
   storage_encrypted    = false
   name                 = "covidapp"
   username             = "stoplight"
-  password             = "correct.OCCstoplight"
+  password             = var.dbpassword
   port                 = "3306"
   parameter_group_name = "default.mysql5.7"
   publicly_accessible  = false
