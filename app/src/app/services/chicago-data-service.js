@@ -25,7 +25,12 @@ export default class ChicagoDataService {
           latest = row.week_number;
           parsed = {};
         }
-        parsed[row.zip_code] = parseFloat(row.case_rate_weekly);
+        parsed[row.zip_code] = {};
+        parsed[row.zip_code]["cases"]     = parseFloat(row.case_rate_weekly);
+        parsed[row.zip_code]["tests"]     = parseFloat(row.test_rate_weekly);
+        parsed[row.zip_code]["positives"] = parseFloat(row.percent_tested_positive_weekly);
+        parsed[row.zip_code]["deaths"]    = parseFloat(row.death_rate_weekly);
+
         asOf = row.week_end;
       }
     });

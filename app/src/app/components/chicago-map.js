@@ -30,7 +30,6 @@ export default class ChicagoMap extends LitElement {
             map: { type: Object },
 
             stats: { type: Object },
-            dataMappedByCountry: { type: Object },
             dataMappedByCoordinates: { type: Object },
         };
     }
@@ -71,28 +70,34 @@ export default class ChicagoMap extends LitElement {
         this.stats = await ChicagoDataService.getChicagoData();
         this.totalSubmitters = dayjs(this.stats['asOf']).format('MMMM D');
         const weightRanges = [1, 10, 20, 50, 100, 200, 300, 400, 500];
-        
 
         let maxWeight = 0;
         mapColors = [];
 
         zipcodes.features.forEach((feature) => {
             const code = feature.properties.zip;
-            let count = 0;
-            let weight = 0;
+            let cases     = -1;
+            let tests     = 0;
+            let positives = 0;
+            let deaths    = 0;
             
             if (code && this.stats[code]) {
-              weight = parseFloat(this.stats[code]);
-              count = 1;
+              cases = parseFloat(this.stats[code]["cases"]);
+              tests = parseFloat(this.stats[code]["tests"]);
+              positives = parseFloat(this.stats[code]["positives"]) * 100;
+              deaths = parseFloat(this.stats[code]["deaths"]);
             }
 
-            feature.properties.SUBMISSIONS = count;
-            feature.properties.WEIGHT = weight; // Math.floor(Math.random() * 90 + 1);
-            maxWeight = weight > maxWeight ? weight : maxWeight;
+            feature.properties.CASES     = cases;
+            feature.properties.TESTS     = tests; 
+            feature.properties.POSITIVES = positives.toPrecision(2) + "%"; 
+            feature.properties.DEATHS    = deaths; 
+            maxWeight = cases > maxWeight ? cases : maxWeight;
         });
 
-        // maxWeight = 20;
-        // break maximum weight into 10 equal parts starting from zero so that colors are equally distributes irrespective of range of values
+        // break maximum weight into 10 equal parts starting from 
+        // zero so that colors are equally distributed
+
         const finalWeightScale = weightRanges.find(w=>w > maxWeight) || (Math.ceil((maxWeight+1)/10)*10);
         const step = parseInt(finalWeightScale / 10);
         const range = this.getRange(step, finalWeightScale, step);
@@ -152,7 +157,7 @@ export default class ChicagoMap extends LitElement {
                 source: 'zipcodes',
                 paint: {
                     'fill-color': {
-                        'property': 'WEIGHT',
+                        'property': 'CASES',
                         'stops': mapColors
                     },
                     'fill-opacity': 0.5
@@ -165,8 +170,17 @@ export default class ChicagoMap extends LitElement {
                 .setLngLat(e.lngLat)
                 .setHTML(`
                     <div style='font-size:12px;'>
-                        <div><b>Zip Code: ${e.features[0].properties.zip}</b></div>
-                        <div>COVID rate: ${e.features[0].properties.WEIGHT}</div>
+                        <div>
+                            <b>Zip Code: ${e.features[0].properties.zip}</b>
+                        </div>  
+                            ${e.features[0].properties.CASES >= 0 
+                             ? `
+                             <div>case rate: ${e.features[0].properties.CASES}</div>
+                             <div>testing rate: ${e.features[0].properties.TESTS}</div>
+                             <div>positive rate: ${e.features[0].properties.POSITIVES}</div>
+                             <div>death rate: ${e.features[0].properties.DEATHS}</div>
+                             ` : '<div>no data</div>'
+                             }
                     </div>
                 `)
                 .addTo(map);
@@ -177,9 +191,6 @@ export default class ChicagoMap extends LitElement {
         });
     }
 
-    getSubmissionsInCountry(countryCode) {
-        return this.dataMappedByCountry.find(cData => cData.countryCode === countryCode);
-    }
 
     render() {
         return html`
