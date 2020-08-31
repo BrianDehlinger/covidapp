@@ -167,8 +167,8 @@ class SubmissionResource(Resource):
         device_id = int(data['device_id'])
         # Cut precision to neares decade
         if data['birth_year'] is not None:
-            print("data birth year is not none")
-            print(data['birth_year'])
+            #print("data birth year is not none")
+            #print(data['birth_year'])
             birth_year = round(int(data['birth_year']), -1)
         else:
             birth_year = None
@@ -192,8 +192,8 @@ class SubmissionResource(Resource):
             errors += ('device_id', 'Value not in range')
 
         if birth_year is not None:
-            print('Birth year is not none')
-            print(birth_year)
+            #print('Birth year is not none')
+            #print(birth_year)
             if not 1900 <= birth_year <= 2020:
                 errors += ('birth_year', 'Value not in range')
 

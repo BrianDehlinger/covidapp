@@ -25,14 +25,15 @@ function api_test(){
 api_test '{
   "device_id":"1584694478111",
   "symptom_fever":false,
-  "feeling":"0",
-  "fever_temp":null,
-  "birth_year":"1996",
+  "feeling":"2",
+  "symptom_cough":true,
+  "symptom_headache":true,
+  "birth_year":"1990",
   "gender":"F",
-  "location_country_code":"FI",
-  "location_postal_code":"20100",
-  "location_lng":"22.28",
-  "location_lat":"60.45"
+  "location_country_code":"US",
+  "location_postal_code":"60605",
+  "location_lng":null,
+  "location_lat":null
 }'
 
 # No fever and fever_temp missing
