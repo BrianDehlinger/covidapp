@@ -1,8 +1,6 @@
 /* eslint-disable */
 import countryList from '../../assets/countrydata/country-data.json';
 
-const apiKey = 'AIzaSyDuQel_c1dGUx83gQ5p2dCdLgO6BePDKMY';
-
 export default class GeolocatorService {
   static async getGeoCodingInfo(lat, lng) {
     return fetch(
