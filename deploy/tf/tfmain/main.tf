@@ -11,6 +11,17 @@ provider "aws" {
   region = "us-east-2"
 }
 
+data "aws_secretsmanager_secret_version" "creds" {
+  # Fill in the name you gave to your secret
+  secret_id = "covidapp/db_creds"
+}
+
+locals {
+  db_creds = jsondecode(
+    data.aws_secretsmanager_secret_version.creds.secret_string
+  )
+}
+
 data "aws_availability_zones" "availability_zones" {}
 
 resource "aws_vpc" "stoplight" {
@@ -202,8 +213,8 @@ resource "aws_db_instance" "stoplightdb" {
   allocated_storage    = 5
   storage_encrypted    = false
   name                 = "covidapp"
-  username             = "stoplight"
-  password             = "correct.OCCstoplight"
+  username             = local.db_creds.username
+  password             = local.db_creds.password
   port                 = "3306"
   parameter_group_name = "default.mysql5.7"
   publicly_accessible  = false
