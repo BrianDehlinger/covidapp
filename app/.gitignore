@@ -4,3 +4,5 @@ dist
 
 # IDEs
 .idea
+
+*.env

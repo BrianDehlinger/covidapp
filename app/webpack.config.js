@@ -7,6 +7,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { InjectManifest } = require('workbox-webpack-plugin');
 const autoprefixer = require('autoprefixer');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = env => {
   console.log('Running Webpack in NODE_ENV mode', env.NODE_ENV); // 'local'
@@ -69,6 +70,10 @@ module.exports = env => {
     plugins: [
       new webpack.DefinePlugin({
         'process.env.API_URL': JSON.stringify(env.API_URL),
+      }),
+      new Dotenv({
+        path: './.key.env',
+        safe: true
       }),
       autoprefixer,
       new CleanWebpackPlugin({

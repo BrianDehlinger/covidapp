@@ -4,7 +4,7 @@ import countryList from '../../assets/countrydata/country-data.json';
 export default class GeolocatorService {
   static async getGeoCodingInfo(lat, lng) {
     return fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?result_type=postal_code|locality&language=EN&latlng=${lat},${lng}&key=${apiKey}`,
+      `https://maps.googleapis.com/maps/api/geocode/json?result_type=postal_code|locality&language=EN&latlng=${lat},${lng}&key=`+process.env.google_map_api_key,
     )
       .then(res => res.json())
       .then(res => GeolocatorService.parseResult(res))
@@ -13,7 +13,7 @@ export default class GeolocatorService {
 
   static async getGeoCodingInfoByPostalCodeAndCountry(postalCode, country) {
     return fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?result_type=postal_code|locality&components=postal_code:${postalCode}|country:${country}&language=EN&key=${apiKey}`,
+      `https://maps.googleapis.com/maps/api/geocode/json?result_type=postal_code|locality&components=postal_code:${postalCode}|country:${country}&language=EN&key=`+process.env.google_map_api_key,
     )
       .then(res => res.json())
       .then(res => GeolocatorService.parseResult(res))
@@ -88,7 +88,7 @@ export default class GeolocatorService {
     });
   }
 
-  
+
   static returnErrorMessage() {
     return { success: false, message: 'COULD_NOT_LOCATE' };
   }
